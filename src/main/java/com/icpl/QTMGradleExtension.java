@@ -3,21 +3,15 @@ package com.icpl;
 public class QTMGradleExtension
 {
 	private String qtmUrl;
-	private String qtmProfileApiKey;
 	private String qtmAutomationApiKey;
 	private String automationFramework;
 	private String testResultFilePath;
 	private String testSuiteName;
-	private String testSuiteDescription;
 	private String platformName;
-	private String platformCreateNew;
+	private String buildName;
 
 	public String getQtmUrl() {
 		return this.qtmUrl;
-	}
-
-	public String getQtmProfileApiKey() {
-		return this.qtmProfileApiKey;
 	}
 
 	public String getQtmAutomationApiKey() {
@@ -36,16 +30,12 @@ public class QTMGradleExtension
 		return this.testSuiteName;
 	}
 
-	public String getTestSuiteDescription() {
-		return this.testSuiteDescription;
-	}
-
 	public String getPlatformName() {
 		return this.platformName;
 	}
 
-	public String getPlatformCreateNew() {
-		return this.platformCreateNew;
+	public String getBuildName() {
+		return this.buildName;
 	}
 	
 	public String getParsedQtmUrl() {
@@ -54,31 +44,9 @@ public class QTMGradleExtension
 		} else
 			return getQtmUrl();
 	}
-
-	public String getParsedTestSuiteName(String fileName) {
-		return getTestSuiteName().replace("%FNAME%", fileName);
-	}
-
-	public String getParsedTestSuiteDescription() {
-		if (getTestSuiteDescription() == null || getTestSuiteDescription().isEmpty()) {
-			return "This Suite has been created by QTMJenkinsPlugin Plugin!";
-		}
-		return getTestSuiteDescription();
-	}
-
-	public String getParsedPlatformName() {
-		if (getPlatformName() == null || getPlatformName().isEmpty()) {
-			return "none";
-		}
-		return getPlatformName();
-	}
 	
 	public void setQtmUrl(String qtmApiUrl) {
 		this.qtmUrl = qtmApiUrl;
-	}
-
-	public void setQtmProfileApiKey(String qtmApiKey) {
-		this.qtmProfileApiKey = qtmApiKey;
 	}
 
 	public void setQtmAutomationApiKey(String qtmApiKey) {
@@ -98,17 +66,13 @@ public class QTMGradleExtension
 		this.testSuiteName = testName;
 	}
 	
-	public void setTestSuiteDescription(String testDescription) {
-		this.testSuiteDescription = testDescription;
-	}
-	
 	public void setPlatformName(String name)
 	{
-		this.platformName = platformName;
+		this.platformName = name;
 	}
 	
-	public void setPlatformCreateNew(String platformCreateNew)
+	public void setBuildName(String name)
 	{
-		this.platformCreateNew = platformCreateNew;
+		this.buildName = name;
 	}
 }

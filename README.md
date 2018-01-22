@@ -10,14 +10,12 @@ apply plugin: 'com.icpl.qtmgradleplugin'
 qtmConfig 
 {
 	qtmUrl = 'https://qtmserverurl.com/'
-	qtmProfileApiKey = ''
 	qtmAutomationApiKey = ''
 	automationFramework = 'JUNIT'
 	testSuiteName = 'QTM4Gradle Test Run - JUNIT'
-	testSuiteDescription = 'This Test suite is created by Gradle Plugin QTMGradlePlugin'
 	testResultFilePath = '/test-results/test/*.xml'
 	platformName = 'MyPlatform2'
-	platformCreateNew = 'false'
+	buildName = 'myCycleName'
 }
 
 buildscript
@@ -40,11 +38,9 @@ use command 'gradle test publishReslutsToQTM' from your project.
 The task publishResultsToQTM always looks for qtmConfig in build.gradle file of your project. Provide following details :-
 
 qtmUrl - url to qtm instance
-qtmProfileApiKey - QTM Profile Key
 qtmAutomationApiKey - Automation Key
 automationFramework - JUNIT/TESTNG/CUCUMBER/QAS
-testSuiteName - name of test suite. use %FNAME% to include result file name in suite name
-testSuiteDescription(optional) - simple description for test suite
+testSuiteName - name of test suite.
 testResultFilePath - path to result file relative to bild directory
-platformName(optional) - Name of the platform to connect the suite to
-platformCreateNew(optional) - true/false to create a new platform if the above mentioned plaform doesnt exist. It will use No Platform otherwise.
+platformName(optional) - Name of the platform to connect the suite
+buildName - Name of cycle linked to test suite

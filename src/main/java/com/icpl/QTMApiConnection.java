@@ -26,280 +26,466 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 public class QTMApiConnection {
-	private String url;
-	private String key;
 
-	public QTMApiConnection(String url, String key) {
-		this.url = url;
-		this.key = key;
-	}
+    private String url;
+    private String key;
 
-	public String getUrl() {
-		return this.url;
-	}
+    private JSONObject projectInformationJson;
 
-	public String getKey() {
-		return this.key;
-	}
+    public QTMApiConnection(String url, String key) {
+        this.url = url;
+        this.key = key;
+    }
 
-	public boolean validateConnection() {
-		// TODO validate connection using API
-		return true;
-	}
+    public String getUrl() {
+        return this.url;
+    }
 
-	public String getAutomationApiKey() throws QTMConnectionException {
-		String key = null;
-		CloseableHttpClient httpClient = null;
-		CloseableHttpResponse response = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			HttpGet httpGet = new HttpGet(getUrl() + "/rest/admin/project/getinfo");
-			httpGet.addHeader("apikey", getKey());
-			httpGet.addHeader("scope", "default");
-			httpGet.addHeader("Accept", "application/json");
-			response = httpClient.execute(httpGet);
-			String respEntityStr = EntityUtils.toString(response.getEntity());
-			if (!respEntityStr.contains("success"))
-				throw new QTMConnectionException();
-			JSONParser parser = new JSONParser();
-			JSONObject automationJson = (JSONObject) parser.parse(respEntityStr);
-			key = automationJson.get("automationAPIKey").toString();
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException("Could not generate Automation Key!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-		return key;
-	}
+    public String getKey() {
+        return this.key;
+    }
 
-	public Map<String, String> getGeneralInfo() throws QTMConnectionException {
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = null;
-		Map<String, String> projectData = null;
-		try {
-			HttpGet httpGet = new HttpGet(getUrl() + "/rest/admin/project/getinfo");
-			httpGet.addHeader("apikey", getKey());
-			httpGet.addHeader("scope", "default");
-			httpGet.addHeader("Accept", "application/json");
+    public boolean validateConnection() {
+        // TODO validate connection using API
+        return true;
+    }
 
-			httpClient = HttpClients.createDefault();
-			response = httpClient.execute(httpGet);
-			String respEntityStr = EntityUtils.toString(response.getEntity());
-			
-			JSONParser parser = new JSONParser();
-			JSONObject projectsInfoJson = (JSONObject) parser.parse(respEntityStr);
-			JSONObject rootFolders = (JSONObject) projectsInfoJson.get("rootFolders");
-			JSONObject rootFoldersTS = (JSONObject) rootFolders.get("TS");
+    public JSONObject getProjectInformationJson() throws QTMConnectionException {
+        if (this.projectInformationJson == null) {
+            this.projectInformationJson = generateProjectInformationJson();
+        }
+        return this.projectInformationJson;
+    }
 
-			projectData = new HashMap<String, String>();
-			projectData.put("testSuiteParentFolderId", rootFoldersTS.get("id").toString());
-			projectData.put("projectId", projectsInfoJson.get("currentProjectId").toString());
-			projectData.put("releaseId", projectsInfoJson.get("currentReleaseId").toString());
-			projectData.put("buildId", projectsInfoJson.get("currentBuildId").toString());
+    public String getAutomationApiKey() throws QTMConnectionException {
+        String key = null;
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse response = null;
+        try {
+            httpClient = HttpClients.createDefault();
+            HttpGet httpGet = new HttpGet(getUrl() + "/rest/admin/project/getinfo");
+            httpGet.addHeader("apikey", getKey());
+            httpGet.addHeader("scope", "default");
+            httpGet.addHeader("Accept", "application/json");
+            response = httpClient.execute(httpGet);
+            String respEntityStr = EntityUtils.toString(response.getEntity());
+            if (!respEntityStr.contains("success")) {
+                throw new QTMConnectionException();
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject automationJson = (JSONObject) parser.parse(respEntityStr);
+            key = automationJson.get("automationAPIKey").toString();
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not generate Automation Key!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return key;
+    }
 
-			JSONObject views = (JSONObject) projectsInfoJson.get("views");
-			JSONObject views_ts = (JSONObject) views.get("TS");
-			JSONObject views_ts_platform = (JSONObject) views_ts.get("TsPlatform");
-			projectData.put("defaultPlatformId", views_ts_platform.get("id").toString());
+    public Map<String, String> getGeneralInfo() throws QTMConnectionException {
+        Map<String, String> projectData = null;
+        try {
+            JSONObject projectsInfoJson = getProjectInformationJson();
+            JSONObject rootFolders = (JSONObject) projectsInfoJson.get("rootFolders");
+            JSONObject rootFoldersTS = (JSONObject) rootFolders.get("TS");
 
-			JSONObject projectPlatforms = (JSONObject) projectsInfoJson.get("projectPlatforms");
-			Iterator iterator = projectPlatforms.keySet().iterator();
-			for (; iterator.hasNext();) {
-				String pid = (String) iterator.next();
-				projectData.put("qtmplatform:" + projectPlatforms.get(pid), pid);
-			}
+            projectData = new HashMap<String, String>();
+            projectData.put("testSuiteParentFolderId", rootFoldersTS.get("id").toString());
+            projectData.put("projectId", projectsInfoJson.get("currentProjectId").toString());
+            projectData.put("releaseId", projectsInfoJson.get("currentReleaseId").toString());
+            projectData.put("buildId", projectsInfoJson.get("currentBuildId").toString());
 
-			JSONObject currentUser = (JSONObject) projectsInfoJson.get("currentUser");
-			projectData.put("currentUserId", currentUser.get("id").toString());
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException("Could not fetch project information!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-		return projectData;
-	}
+            JSONObject views = (JSONObject) projectsInfoJson.get("views");
+            JSONObject views_ts = (JSONObject) views.get("TS");
+            JSONObject views_ts_platform = (JSONObject) views_ts.get("TsPlatform");
+            projectData.put("defaultPlatformId", views_ts_platform.get("id").toString());
 
-	public String createNewPlatform(String platformName, String scope) throws QTMConnectionException {
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = null;
-		String platformId = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			HttpPost post = new HttpPost(getUrl() + "/rest/admin/platform");
-			post.setHeader("Accept", "application/json");
-			post.setHeader("Content-Type", "application/json");
-			post.setHeader("scope", scope);
-			post.setHeader("apiKey", getKey());
+            JSONObject projectPlatforms = (JSONObject) projectsInfoJson.get("projectPlatforms");
+            Iterator iterator = projectPlatforms.keySet().iterator();
+            for (; iterator.hasNext();) {
+                String pid = (String) iterator.next();
+                projectData.put("qtmplatform:" + projectPlatforms.get(pid), pid);
+            }
 
-			JSONObject reqJson = new JSONObject();
-			reqJson.put("name", platformName);
-			reqJson.put("platformID", 0);
-			reqJson.put("platformType", "single");
+            JSONObject currentUser = (JSONObject) projectsInfoJson.get("currentUser");
+            projectData.put("currentUserId", currentUser.get("id").toString());
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch project information!");
+        }
+        return projectData;
+    }
 
-			post.setEntity(new StringEntity(reqJson.toJSONString()));
-			response = httpClient.execute(post);
-			String respEntity = EntityUtils.toString(response.getEntity());
-			if (!respEntity.contains("success"))
-				throw new QTMConnectionException();
-			JSONParser parser = new JSONParser();
-			JSONObject respJson = (JSONObject) parser.parse(respEntity);
-			platformId = respJson.get("platformID").toString();
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException("Could not create new platform '" + platformName + "'!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-		return platformId;
-	}
+    public String createNewPlatform(String platformName, String scope) throws QTMConnectionException {
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        String platformId = null;
+        try {
+            httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost(getUrl() + "/rest/admin/platform");
+            post.setHeader("Accept", "application/json");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("scope", scope);
+            post.setHeader("apiKey", getKey());
 
-	public String createNewTestSuite(String testSuiteName, String testSuiteDescription, String ownerId,
-			String parentFolderId, String automationFramework, String buildFramework, String projectDirectory,
-			String filePath, String projectId, String releaseId, String buildId) throws QTMConnectionException {
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = null;
-		String scope = projectId + ":" + releaseId + ":" + buildId;
-		String testSuiteId = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			HttpPost post = new HttpPost(getUrl() + "/rest/testsuites");
-			post.setHeader("Accept", "application/json");
-			post.setHeader("Content-Type", "application/json");
-			post.setHeader("scope", scope);
-			post.setHeader("apiKey", getKey());
+            JSONObject reqJson = new JSONObject();
+            reqJson.put("name", platformName);
+            reqJson.put("platformID", 0);
+            reqJson.put("platformType", "single");
 
-			JSONObject reqJson = new JSONObject();
-			reqJson.put("name", testSuiteName);
-			reqJson.put("description", testSuiteDescription);
-			reqJson.put("owner", ownerId);
-			reqJson.put("parentFolderId", parentFolderId);
-			reqJson.put("isAutomatedFlag", "true");
-			reqJson.put("frameWork", automationFramework);
-			if (!buildFramework.equals("none"))
-				reqJson.put("buildFramework", buildFramework);
-			reqJson.put("projectHomeDirectory", projectDirectory);
-			reqJson.put("projectPath", filePath);
+            post.setEntity(new StringEntity(reqJson.toJSONString()));
+            response = httpClient.execute(post);
+            String respEntity = EntityUtils.toString(response.getEntity());
+            if (!respEntity.contains("success")) {
+                throw new QTMConnectionException();
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject respJson = (JSONObject) parser.parse(respEntity);
+            platformId = respJson.get("platformID").toString();
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not create new platform '" + platformName + "'!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return platformId;
+    }
 
-			post.setEntity(new StringEntity(reqJson.toJSONString()));
-			response = httpClient.execute(post);
+    public String createNewTestSuite(String testSuiteName, String testSuiteDescription, String ownerId,
+            String parentFolderId, String automationFramework, String buildFramework, String projectDirectory,
+            String filePath, String projectId, String releaseId, String buildId) throws QTMConnectionException {
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        String scope = projectId + ":" + releaseId + ":" + buildId;
+        String testSuiteId = null;
+        try {
+            httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost(getUrl() + "/rest/testsuites");
+            post.setHeader("Accept", "application/json");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("scope", scope);
+            post.setHeader("apiKey", getKey());
 
-			String respEntity = EntityUtils.toString(response.getEntity());
-			if (!respEntity.contains("success"))
-				throw new QTMConnectionException();
-			JSONParser parser = new JSONParser();
-			JSONObject respJson = (JSONObject) parser.parse(respEntity);
-			JSONArray data = (JSONArray) respJson.get("data");
-			respJson = (JSONObject) data.get(0);
-			testSuiteId = respJson.get("id").toString();
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException("Could not create new test suite '" + testSuiteName + "'!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-		return testSuiteId;
-	}
+            JSONObject reqJson = new JSONObject();
+            reqJson.put("name", testSuiteName);
+            reqJson.put("description", testSuiteDescription);
+            reqJson.put("owner", ownerId);
+            reqJson.put("parentFolderId", parentFolderId);
+            reqJson.put("isAutomatedFlag", "true");
+            reqJson.put("frameWork", automationFramework);
+            if (!buildFramework.equals("none")) {
+                reqJson.put("buildFramework", buildFramework);
+            }
+            reqJson.put("projectHomeDirectory", projectDirectory);
+            reqJson.put("projectPath", filePath);
 
-	public boolean mapTestSuiteReleaseCycle(String testSuiteId, String releaseId, String buildId, String scope)
-			throws QTMConnectionException {
-		CloseableHttpResponse response = null;
-		CloseableHttpClient httpClient = null;
-		HttpPost post = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			post = new HttpPost(getUrl() + "/rest/testsuites/mapReleaseCycle");
-			post.setHeader("Accept", "application/json");
-			post.setHeader("Content-Type", "application/json");
-			post.setHeader("scope", scope);
-			post.setHeader("apiKey", getKey());
+            post.setEntity(new StringEntity(reqJson.toJSONString()));
+            response = httpClient.execute(post);
 
-			JSONObject reqJson = new JSONObject();
-			reqJson.put("tsId", testSuiteId);
-			reqJson.put("buildID", buildId);
-			reqJson.put("releaseId", releaseId);
+            String respEntity = EntityUtils.toString(response.getEntity());
+            if (!respEntity.contains("success")) {
+                throw new QTMConnectionException();
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject respJson = (JSONObject) parser.parse(respEntity);
+            JSONArray data = (JSONArray) respJson.get("data");
+            respJson = (JSONObject) data.get(0);
+            testSuiteId = respJson.get("id").toString();
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not create new test suite '" + testSuiteName + "'!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return testSuiteId;
+    }
 
-			JSONArray dataarray = new JSONArray();
-			dataarray.add(reqJson);
+    public boolean mapTestSuiteReleaseCycle(String testSuiteId, String releaseId, String buildId, String scope)
+            throws QTMConnectionException {
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        HttpPost post = null;
+        try {
+            httpClient = HttpClients.createDefault();
+            post = new HttpPost(getUrl() + "/rest/testsuites/mapReleaseCycle");
+            post.setHeader("Accept", "application/json");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("scope", scope);
+            post.setHeader("apiKey", getKey());
 
-			JSONObject finalJson = new JSONObject();
-			finalJson.put("data", dataarray);
+            JSONObject reqJson = new JSONObject();
+            reqJson.put("tsId", testSuiteId);
+            reqJson.put("buildID", buildId);
+            reqJson.put("releaseId", releaseId);
 
-			post.setEntity(new StringEntity(finalJson.toJSONString()));
-			response = httpClient.execute(post);
-			String respEntity = EntityUtils.toString(response.getEntity());
-			if (!respEntity.contains("success"))
-				throw new QTMConnectionException();
+            JSONArray dataarray = new JSONArray();
+            dataarray.add(reqJson);
 
-			return true;
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException("Could not map test suite '" + testSuiteId + "' to release & cycle!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-	}
+            JSONObject finalJson = new JSONObject();
+            finalJson.put("data", dataarray);
 
-	public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String automationFramework,
-			String buildId, String platformId, String scope, String automationApiKey)
-			throws InvalidCredentialsException, ProtocolException, IOException, QTMConnectionException {
-		CloseableHttpClient httpClient = null;
-		CloseableHttpResponse response = null;
-		try {
-			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-			builder.addTextBody("entityType", automationFramework, ContentType.TEXT_PLAIN);
-			builder.addTextBody("testsuiteId", testSuiteId, ContentType.TEXT_PLAIN);
-			builder.addTextBody("buildID", buildId, ContentType.TEXT_PLAIN);
-			builder.addTextBody("platformID", platformId, ContentType.TEXT_PLAIN);
+            post.setEntity(new StringEntity(finalJson.toJSONString()));
+            response = httpClient.execute(post);
+            String respEntity = EntityUtils.toString(response.getEntity());
+            if (!respEntity.contains("success")) {
+                throw new QTMConnectionException();
+            }
 
-			File f = new File(filePath);
-			builder.addPart("file", new FileBody(f));
-			HttpEntity multipart = builder.build();
+            return true;
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not map test suite '" + testSuiteId + "' to release & cycle!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+    }
 
-			HttpPost uploadFile = new HttpPost(getUrl() + "/rest/import/createandscheduletestresults/1");
-			uploadFile.addHeader("accept", "application/json");
-			uploadFile.addHeader("scope", scope);
-			uploadFile.addHeader("apiKey", automationApiKey);
-			uploadFile.setEntity(multipart);
+    public boolean uploadFileToTestSuite(String filePath, String testSuiteName, String automationFramework,
+										String buildName, String platformName)
+            throws InvalidCredentialsException, ProtocolException, IOException, QTMConnectionException {
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse response = null;
+        try {
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.addTextBody("entityType", automationFramework, ContentType.TEXT_PLAIN);
+            builder.addTextBody("testSuiteName", testSuiteName, ContentType.TEXT_PLAIN);
+            builder.addTextBody("buildName", buildName, ContentType.TEXT_PLAIN);
+            builder.addTextBody("platformName", platformName, ContentType.TEXT_PLAIN);
 
-			httpClient = HttpClients.createDefault();
-			response = httpClient.execute(uploadFile);
+            File f = new File(filePath);
+            builder.addPart("file", new FileBody(f));
+            HttpEntity multipart = builder.build();
 
-			String respEntityStr = EntityUtils.toString(response.getEntity());
-			if (!respEntityStr.contains("success"))
-				throw new QTMConnectionException();
-			return true;
-		} catch (Exception e) {
-			System.out.println("QTMGradlePlugin : ERROR : " + e);
-			throw new QTMConnectionException(
-					"Could not upload file '" + filePath + "' to test suite '" + testSuiteId + "'!");
-		} finally {
-			try {
-				httpClient.close();
-				response.close();
-			} catch (Exception e) {
-			}
-		}
-	}
+            HttpPost uploadFile = new HttpPost(getUrl() + "/rest/import/createandscheduletestresults/1");
+            uploadFile.addHeader("accept", "application/json");
+            uploadFile.addHeader("scope", "default");
+            uploadFile.addHeader("apiKey", getKey());
+            uploadFile.setEntity(multipart);
+
+            httpClient = HttpClients.createDefault();
+            response = httpClient.execute(uploadFile);
+
+            if (!(response.getStatusLine().getStatusCode() == 200)) {
+                throw new QTMConnectionException("Error uploading file!");
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException(
+                    "Could not upload file '" + filePath + "' to test suite '" + testSuiteName + "'!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public Map<Long, String> getProjectList() throws QTMConnectionException {
+        Map<Long, String> projectList = null;
+        try {
+            JSONObject projectsInfoJson = getProjectInformationJson();
+            JSONArray projects = (JSONArray) projectsInfoJson.get("projects");
+            projectList = new HashMap<Long, String>();
+            JSONObject project = null;
+            Iterator itr = projects.iterator();
+            while (itr.hasNext()) {
+                project = (JSONObject) itr.next();
+                if (!(boolean) project.get("isArchive")) {
+                    projectList.put((Long) project.get("projectID"), (String) project.get("name"));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch project list!");
+        }
+        return projectList;
+    }
+
+    public Map<Long, String> getReleaseList(Long projectId) throws QTMConnectionException {
+        Map<Long, String> releaseList = null;
+        try {
+            JSONObject projectsInfoJson = getProjectInformationJson();
+            JSONArray projects = (JSONArray) projectsInfoJson.get("projects");
+            releaseList = new HashMap<Long, String>();
+            JSONObject project = null;
+            Iterator projectsI = projects.iterator();
+            while (projectsI.hasNext()) {
+                project = (JSONObject) projectsI.next();
+                if ((Long) project.get("projectID") == projectId) {
+                    JSONArray releases = (JSONArray) project.get("releases");
+                    JSONObject release = null;
+                    Iterator releaseI = releases.iterator();
+                    while (releaseI.hasNext()) {
+                        release = (JSONObject) releaseI.next();
+                        if (!(boolean) release.get("isArchive")) {
+                            releaseList.put((Long) release.get("releaseID"), (String) release.get("name"));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch project list!");
+        }
+        return releaseList;
+    }
+
+    public Map<Long, String> getBuildList(Long projectId, Long releaseId) throws QTMConnectionException {
+        Map<Long, String> buildList = null;
+        try {
+            JSONObject projectsInfoJson = getProjectInformationJson();
+            JSONArray projects = (JSONArray) projectsInfoJson.get("projects");
+            buildList = new HashMap<Long, String>();
+            JSONObject project = null;
+            Iterator projectsI = projects.iterator();
+            while (projectsI.hasNext()) {
+                project = (JSONObject) projectsI.next();
+                if ((Long) project.get("projectID") == projectId) {
+                    JSONArray releases = (JSONArray) project.get("releases");
+                    JSONObject release = null;
+                    Iterator releaseI = releases.iterator();
+                    while (releaseI.hasNext()) {
+                        release = (JSONObject) releaseI.next();
+                        if ((Long) release.get("releaseID") == releaseId) {
+                            JSONArray builds = (JSONArray) release.get("builds");
+                            JSONObject build = null;
+                            Iterator buildI = builds.iterator();
+                            while (buildI.hasNext()) {
+                                build = (JSONObject) buildI.next();
+                                if (!(boolean) build.get("isArchive")) {
+                                    buildList.put((Long) build.get("buildID"), (String) build.get("name"));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch build list!");
+        }
+        return buildList;
+    }
+
+    public Map<Long, String> generateTestSuiteList(Long projectId) throws QTMConnectionException {
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        HttpPost post = null;
+        Map<Long, String> testSuiteList = null;
+        try {
+            //generate a scope for given projectId
+            JSONObject projectsInfoJson = getProjectInformationJson();
+            JSONArray projects = (JSONArray) projectsInfoJson.get("projects");
+            String scope = null;
+            JSONObject project = null;
+            Iterator projectsI = projects.iterator();
+
+            while (projectsI.hasNext()) {
+                project = (JSONObject) projectsI.next();
+                if ((Long) project.get("projectID") == projectId) {
+                    scope = projectId.toString();
+                    JSONArray releases = (JSONArray) project.get("releases");
+                    JSONObject release = (JSONObject) releases.get(0);
+                    scope += ":" + release.get("releaseID").toString();
+                    JSONArray builds = (JSONArray) release.get("builds");
+                    JSONObject build = (JSONObject) builds.get(0);
+                    scope += ":" + build.get("buildID").toString();
+                }
+            }
+            if (scope == null) {
+                throw new QTMConnectionException("Could not fetch test suite list!");
+            }
+
+            //get test suite root folder id to get all test suites
+            JSONObject rootFolders = (JSONObject) projectsInfoJson.get("rootFolders");
+            JSONObject rootFoldersTS = (JSONObject) rootFolders.get("TS");
+
+            String testSuiteParentFolderId = rootFoldersTS.get("id").toString();
+
+            //Make the api call
+            httpClient = HttpClients.createDefault();
+            post = new HttpPost(getUrl() + "/rest/testsuites/list");
+            post.setHeader("Accept", "application/json");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("scope", scope);
+            post.setHeader("apiKey", getKey());
+
+            JSONObject reqJson = new JSONObject();
+            reqJson.put("tsFolderId", testSuiteParentFolderId);
+            reqJson.put("buildID", "cycle");
+
+            post.setEntity(new StringEntity(reqJson.toJSONString()));
+            response = httpClient.execute(post);
+            String respEntity = EntityUtils.toString(response.getEntity());
+            JSONParser parser = new JSONParser();
+            JSONObject testSuites = (JSONObject) parser.parse(respEntity);
+            JSONArray data = (JSONArray) testSuites.get("data");
+            JSONObject suite = null;
+            testSuiteList = new HashMap<Long, String>();
+            Iterator dataI = data.iterator();
+            while (dataI.hasNext()) {
+                suite = (JSONObject) dataI.next();
+                testSuiteList.put((Long) suite.get("tsID"), (String) suite.get("name"));
+            }
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch test suite list!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return testSuiteList;
+    }
+
+    public JSONObject generateProjectInformationJson() throws QTMConnectionException {
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
+        JSONObject projectsInfoJson = null;
+        try {
+            HttpGet httpGet = new HttpGet(getUrl() + "/rest/admin/project/getinfo");
+            httpGet.addHeader("apikey", getKey());
+            httpGet.addHeader("scope", "default");
+            httpGet.addHeader("Accept", "application/json");
+
+            httpClient = HttpClients.createDefault();
+            response = httpClient.execute(httpGet);
+            String respEntityStr = EntityUtils.toString(response.getEntity());
+            JSONParser parser = new JSONParser();
+            projectsInfoJson = (JSONObject) parser.parse(respEntityStr);
+
+        } catch (Exception e) {
+            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            throw new QTMConnectionException("Could not fetch project information!");
+        } finally {
+            try {
+                httpClient.close();
+                response.close();
+            } catch (Exception e) {
+            }
+        }
+        return projectsInfoJson;
+    }
 }
