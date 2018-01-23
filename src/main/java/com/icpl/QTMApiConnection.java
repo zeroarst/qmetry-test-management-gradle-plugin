@@ -50,14 +50,14 @@ public class QTMApiConnection {
         return true;
     }
 
-    public JSONObject getProjectInformationJson() throws QTMConnectionException {
+    public JSONObject getProjectInformationJson() throws QTMException {
         if (this.projectInformationJson == null) {
             this.projectInformationJson = generateProjectInformationJson();
         }
         return this.projectInformationJson;
     }
 
-    public String getAutomationApiKey() throws QTMConnectionException {
+    public String getAutomationApiKey() throws QTMException {
         String key = null;
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
@@ -70,14 +70,14 @@ public class QTMApiConnection {
             response = httpClient.execute(httpGet);
             String respEntityStr = EntityUtils.toString(response.getEntity());
             if (!respEntityStr.contains("success")) {
-                throw new QTMConnectionException();
+                throw new QTMException();
             }
             JSONParser parser = new JSONParser();
             JSONObject automationJson = (JSONObject) parser.parse(respEntityStr);
             key = automationJson.get("automationAPIKey").toString();
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not generate Automation Key!");
+            throw new QTMException("Could not generate Automation Key!");
         } finally {
             try {
                 httpClient.close();
@@ -88,7 +88,7 @@ public class QTMApiConnection {
         return key;
     }
 
-    public Map<String, String> getGeneralInfo() throws QTMConnectionException {
+    public Map<String, String> getGeneralInfo() throws QTMException {
         Map<String, String> projectData = null;
         try {
             JSONObject projectsInfoJson = getProjectInformationJson();
@@ -117,12 +117,12 @@ public class QTMApiConnection {
             projectData.put("currentUserId", currentUser.get("id").toString());
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch project information!");
+            throw new QTMException("Could not fetch project information!");
         }
         return projectData;
     }
 
-    public String createNewPlatform(String platformName, String scope) throws QTMConnectionException {
+    public String createNewPlatform(String platformName, String scope) throws QTMException {
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         String platformId = null;
@@ -143,14 +143,14 @@ public class QTMApiConnection {
             response = httpClient.execute(post);
             String respEntity = EntityUtils.toString(response.getEntity());
             if (!respEntity.contains("success")) {
-                throw new QTMConnectionException();
+                throw new QTMException();
             }
             JSONParser parser = new JSONParser();
             JSONObject respJson = (JSONObject) parser.parse(respEntity);
             platformId = respJson.get("platformID").toString();
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not create new platform '" + platformName + "'!");
+            throw new QTMException("Could not create new platform '" + platformName + "'!");
         } finally {
             try {
                 httpClient.close();
@@ -163,7 +163,7 @@ public class QTMApiConnection {
 
     public String createNewTestSuite(String testSuiteName, String testSuiteDescription, String ownerId,
             String parentFolderId, String automationFramework, String buildFramework, String projectDirectory,
-            String filePath, String projectId, String releaseId, String buildId) throws QTMConnectionException {
+            String filePath, String projectId, String releaseId, String buildId) throws QTMException {
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         String scope = projectId + ":" + releaseId + ":" + buildId;
@@ -194,7 +194,7 @@ public class QTMApiConnection {
 
             String respEntity = EntityUtils.toString(response.getEntity());
             if (!respEntity.contains("success")) {
-                throw new QTMConnectionException();
+                throw new QTMException();
             }
             JSONParser parser = new JSONParser();
             JSONObject respJson = (JSONObject) parser.parse(respEntity);
@@ -203,7 +203,7 @@ public class QTMApiConnection {
             testSuiteId = respJson.get("id").toString();
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not create new test suite '" + testSuiteName + "'!");
+            throw new QTMException("Could not create new test suite '" + testSuiteName + "'!");
         } finally {
             try {
                 httpClient.close();
@@ -215,7 +215,7 @@ public class QTMApiConnection {
     }
 
     public boolean mapTestSuiteReleaseCycle(String testSuiteId, String releaseId, String buildId, String scope)
-            throws QTMConnectionException {
+            throws QTMException {
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         HttpPost post = null;
@@ -242,13 +242,13 @@ public class QTMApiConnection {
             response = httpClient.execute(post);
             String respEntity = EntityUtils.toString(response.getEntity());
             if (!respEntity.contains("success")) {
-                throw new QTMConnectionException();
+                throw new QTMException();
             }
 
             return true;
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not map test suite '" + testSuiteId + "' to release & cycle!");
+            throw new QTMException("Could not map test suite '" + testSuiteId + "' to release & cycle!");
         } finally {
             try {
                 httpClient.close();
@@ -260,7 +260,7 @@ public class QTMApiConnection {
 
     public boolean uploadFileToTestSuite(String filePath, String testSuiteName, String automationFramework,
 										String buildName, String platformName)
-            throws InvalidCredentialsException, ProtocolException, IOException, QTMConnectionException {
+            throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
         try {
@@ -284,12 +284,12 @@ public class QTMApiConnection {
             response = httpClient.execute(uploadFile);
 
             if (!(response.getStatusLine().getStatusCode() == 200)) {
-                throw new QTMConnectionException("Error uploading file!");
+                throw new QTMException("Error uploading file!");
             }
             return true;
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException(
+            throw new QTMException(
                     "Could not upload file '" + filePath + "' to test suite '" + testSuiteName + "'!");
         } finally {
             try {
@@ -300,7 +300,7 @@ public class QTMApiConnection {
         }
     }
 
-    public Map<Long, String> getProjectList() throws QTMConnectionException {
+    public Map<Long, String> getProjectList() throws QTMException {
         Map<Long, String> projectList = null;
         try {
             JSONObject projectsInfoJson = getProjectInformationJson();
@@ -316,12 +316,12 @@ public class QTMApiConnection {
             }
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch project list!");
+            throw new QTMException("Could not fetch project list!");
         }
         return projectList;
     }
 
-    public Map<Long, String> getReleaseList(Long projectId) throws QTMConnectionException {
+    public Map<Long, String> getReleaseList(Long projectId) throws QTMException {
         Map<Long, String> releaseList = null;
         try {
             JSONObject projectsInfoJson = getProjectInformationJson();
@@ -345,12 +345,12 @@ public class QTMApiConnection {
             }
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch project list!");
+            throw new QTMException("Could not fetch project list!");
         }
         return releaseList;
     }
 
-    public Map<Long, String> getBuildList(Long projectId, Long releaseId) throws QTMConnectionException {
+    public Map<Long, String> getBuildList(Long projectId, Long releaseId) throws QTMException {
         Map<Long, String> buildList = null;
         try {
             JSONObject projectsInfoJson = getProjectInformationJson();
@@ -382,12 +382,12 @@ public class QTMApiConnection {
             }
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch build list!");
+            throw new QTMException("Could not fetch build list!");
         }
         return buildList;
     }
 
-    public Map<Long, String> generateTestSuiteList(Long projectId) throws QTMConnectionException {
+    public Map<Long, String> generateTestSuiteList(Long projectId) throws QTMException {
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         HttpPost post = null;
@@ -413,7 +413,7 @@ public class QTMApiConnection {
                 }
             }
             if (scope == null) {
-                throw new QTMConnectionException("Could not fetch test suite list!");
+                throw new QTMException("Could not fetch test suite list!");
             }
 
             //get test suite root folder id to get all test suites
@@ -449,7 +449,7 @@ public class QTMApiConnection {
             }
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch test suite list!");
+            throw new QTMException("Could not fetch test suite list!");
         } finally {
             try {
                 httpClient.close();
@@ -460,7 +460,7 @@ public class QTMApiConnection {
         return testSuiteList;
     }
 
-    public JSONObject generateProjectInformationJson() throws QTMConnectionException {
+    public JSONObject generateProjectInformationJson() throws QTMException {
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         JSONObject projectsInfoJson = null;
@@ -478,7 +478,7 @@ public class QTMApiConnection {
 
         } catch (Exception e) {
             System.out.println("QTMJenkinsPlugin : ERROR : " + e);
-            throw new QTMConnectionException("Could not fetch project information!");
+            throw new QTMException("Could not fetch project information!");
         } finally {
             try {
                 httpClient.close();
