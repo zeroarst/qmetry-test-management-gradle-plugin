@@ -1,4 +1,4 @@
-package com.icpl;
+package com.qmetry;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
@@ -12,16 +12,17 @@ public class QTMResultsPublisher extends DefaultTask
     @TaskAction
     public void publishResults() throws QTMException
 	{
+		String pluginName = "QMetry Test Management Gradle Plugin";
 		try 
 		{
 			QTMGradleExtension config = getProject().getExtensions().findByType(QTMGradleExtension.class);
 			if(config == null) throw new QTMException("Could not find QTM configuration! please provide qtmConfig block with appropriate parameters in your build.gradle file!");
 
-			String displayName = "QTMGradlePlugin : Starting Post Build Action";
+			String displayName = pluginName + " : Starting Post Build Action";
 			String repeated = new String(new char[displayName.length()]).replace("\0", "-");
 			System.out.println("\n\n" + repeated + "\n" + displayName + "\n" + repeated);
 
-			String compfilepath = getProject().getBuildDir().toString() + config.getParsedTestResultFilePath();
+			String compfilepath = getProject().getBuildDir().toString() + "/" + config.getParsedTestResultFilePath();
 			File resultFile = new File(compfilepath);
 			if(resultFile==null || !resultFile.exists()) 
 				throw new QTMException("Result file(s) '"+compfilepath+"' not Found!");
@@ -31,48 +32,49 @@ public class QTMResultsPublisher extends DefaultTask
 			{
 				if(resultFile.isDirectory()) 
 				{
-					System.out.println("QTMGradlePlugin : Reading result files from Directory '" + compfilepath+ "'");
+					System.out.println(pluginName + " : Reading result files from Directory '" + compfilepath+ "'");
 					File[] listOfFiles = resultFile.listFiles();
 
 					for (int i = 0; i < listOfFiles.length; i++) 
 					{
 						if (listOfFiles[i].isFile() && (listOfFiles[i].getName().endsWith(".xml") || listOfFiles[i].getName().endsWith(".json"))) 
 						{
-							System.out.println("\nQTMGradlePlugin : Result File Found '" + listOfFiles[i].getName() + "'");
-							System.out.println("QTMGradlePlugin : Uploading result file...");
+							System.out.println("\n" +pluginName+ " : Result File Found '" + listOfFiles[i].getName() + "'");
+							System.out.println(pluginName + " : Uploading result file...");
 							conn.uploadFileToTestSuite(listOfFiles[i].getAbsolutePath(), 
 														config.getParsedTestSuiteName(),
 														config.getParsedAutomationFramework(), 
 														config.getParsedBuildName(), 
 														config.getParsedPlatformName());
-							System.out.println("QTMGradlePlugin : Result file successfully uploaded!");
+							System.out.println(pluginName + " : Result file successfully uploaded!");
 						}
 					}
 				} 
 				else if(resultFile.isFile())
 				{
-					System.out.println("QTMGradlePlugin : Uploading result file '"+compfilepath+"'");
+					System.out.println(pluginName + " : Reading result file '" + compfilepath+ "'");
+					System.out.println(pluginName + " : Uploading result file...");
 					conn.uploadFileToTestSuite(compfilepath, 
 												config.getParsedTestSuiteName(), 
 												config.getParsedAutomationFramework(),
 												config.getParsedBuildName(), 
 												config.getParsedPlatformName());
-					System.out.println("QTMGradlePlugin : Result file successfully uploaded!");
+					System.out.println(pluginName + " : Result file successfully uploaded!");
 				}
 				else
 				{
 					throw new QTMException("Failed to read result file '"+compfilepath+"'");
 				}
-			} // connection synchronized block
+			}
 		} 
 		catch (QTMException e) 
 		{
-			System.out.println("QTMGradlePlugin : ERROR : " + e.getMessage());
+			System.out.println(pluginName + " : ERROR : " + e.getMessage());
 		} 
 		catch (Exception e) 
 		{
-			System.out.println("QTMGradlePlugin : ERROR : " + e.toString());
+			System.out.println(pluginName + " : ERROR : " + e.toString());
 		}
-		System.out.println("\nQTMGradlePlugin : Finished Post Build Action!");
+		System.out.println("\n" + pluginName + " : Finished Post Build Action!");
     }
 }

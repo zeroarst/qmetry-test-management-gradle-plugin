@@ -1,4 +1,4 @@
-package com.icpl;
+package com.qmetry;
 
 public class QTMGradleExtension
 {
@@ -68,7 +68,7 @@ public class QTMGradleExtension
 	public String getParsedBuildName() throws QTMException
 	{
 		if(this.buildName == null)
-			throw new QTMException("Please provide your Build name (QMetry Cycle name) in qtmConfig block as 'buildName'");
+			return "";
 		return this.buildName;
 	}
 	
@@ -90,11 +90,12 @@ public class QTMGradleExtension
 	{
 		if(this.automationFramework == null)
 			throw new QTMException("Please provide your Automation Framework in qtmConfig block as 'automationFramework'");
-		if(!(this.automationFramework.equals("junit/xml") 
-			|| this.automationFramework.equals("testng/xml")
-			|| this.automationFramework.equals("qas/json")
-			|| this.automationFramework.equals("cucumber/json")))
-			throw new QTMException("Automation Framework '"+automationFramework+"' not supported. Use [junit/xml testng/xml qas/json cucumber/json]");
+		if(!(this.automationFramework.equals("JUNIT") 
+			|| this.automationFramework.equals("TESTNG")
+			|| this.automationFramework.equals("QAS")
+			|| this.automationFramework.equals("CUCUMBER")
+			|| this.automationFramework.equals("HPUFT")))
+			throw new QTMException("Automation Framework '"+automationFramework+"' not supported. Use [JUNIT TESTNG QAS CUCUMBER HPUFT]");
 		return this.automationFramework;
 	}
 	

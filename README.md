@@ -5,29 +5,29 @@ To use the plugin,
 'gradle clean install' - to install the plugin in your local maven repository. 
 Use the plugin from anywhere in your gradle project, by including the following code in 'build.gradle' file...
 
-apply plugin: 'com.icpl.qtmgradleplugin'
+apply plugin: 'com.qmetry.qtmgradleplugin'
 
-qtmConfig 
+qtmConfig
 {
-	qtmUrl = 'https://qtmserverurl.com/'
-	qtmAutomationApiKey = 'xjdkghrghdhejdt...'
-	automationFramework = 'JUNIT'
-	testSuiteName = 'QTM4Gradle Test Run - JUNIT'
-	testResultFilePath = '/test-results/test/'
-	platformName = 'MyPlatform2'
-	buildName = 'myCycleName'
+	qtmUrl='https://testmanagement.qmetdry.com/'
+	qtmAutomationApiKey='zEzs7iy77D8ARWX8xMFzJRZTzb66W0LCyaK6xdec'
+	automationFramework='JUNIT'
+	testResultFilePath='/test-results/test/TEST-ispl.sample.AppSecondTest.xml'
+	platformName=''
+	testSuiteName=''
+	buildName=''
 }
 
 buildscript
 {
-    repositories 
+    repositories
 	{
         mavenLocal()
 		mavenCentral()
     }
-    dependencies 
+    dependencies
 	{
-        classpath 'com.icpl:QTMGradlePlugin:1.1'
+        classpath 'com.qmetry:QTMGradlePlugin:1.0'
     }
 }
 
@@ -39,8 +39,8 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 
 qtmUrl - url to qtm instance
 qtmAutomationApiKey - Automation Key
-automationFramework - JUNIT/TESTNG/CUCUMBER/QAS
-testSuiteName (optional) - name of test suite.
+automationFramework - JUNIT/TESTNG/CUCUMBER/QAS/HPUFT
+testSuiteName (optional) - name or Key of test suite.
 buildName - Name of cycle linked to test suite
 testResultFilePath - path to result file (or directory for multiple files) relative to build directory
 platformName(optional) - Name of the platform to connect the suite

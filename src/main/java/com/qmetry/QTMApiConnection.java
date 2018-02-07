@@ -1,4 +1,4 @@
-package com.icpl;
+package com.qmetry;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -50,6 +50,7 @@ public class QTMApiConnection {
         return true;
     }
 
+	/*
     public JSONObject getProjectInformationJson() throws QTMException {
         if (this.projectInformationJson == null) {
             this.projectInformationJson = generateProjectInformationJson();
@@ -257,18 +258,22 @@ public class QTMApiConnection {
             }
         }
     }
+	*/
 
-    public boolean uploadFileToTestSuite(String filePath, String testSuiteName, String automationFramework,
-										String buildName, String platformName)
-            throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
+    public boolean uploadFileToTestSuite(String filePath, String testSuiteName, String automationFramework, String buildName, String platformName)
+    throws InvalidCredentialsException, ProtocolException, IOException, QTMException 
+	{
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
         try {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addTextBody("entityType", automationFramework, ContentType.TEXT_PLAIN);
-            builder.addTextBody("testSuiteName", testSuiteName, ContentType.TEXT_PLAIN);
-            builder.addTextBody("buildName", buildName, ContentType.TEXT_PLAIN);
-            builder.addTextBody("platformName", platformName, ContentType.TEXT_PLAIN);
+			if(testSuiteName!=null && !testSuiteName.isEmpty())
+				builder.addTextBody("testsuiteId", testSuiteName, ContentType.TEXT_PLAIN);
+            if(buildName!=null && !buildName.isEmpty())
+				builder.addTextBody("buildID", buildName, ContentType.TEXT_PLAIN);
+            if(platformName!=null && !platformName.isEmpty())
+				builder.addTextBody("platformID", platformName, ContentType.TEXT_PLAIN);
 
             File f = new File(filePath);
             builder.addPart("file", new FileBody(f));
@@ -282,15 +287,16 @@ public class QTMApiConnection {
 
             httpClient = HttpClients.createDefault();
             response = httpClient.execute(uploadFile);
-
+            String respEntityStr = EntityUtils.toString(response.getEntity());
+			System.out.println("QMetry Test Management Gradle Plugin : Response : " + respEntityStr);
             if (!(response.getStatusLine().getStatusCode() == 200)) {
                 throw new QTMException("Error uploading file!");
             }
             return true;
         } catch (Exception e) {
-            System.out.println("QTMJenkinsPlugin : ERROR : " + e);
+            System.out.println("QMetry Test Management Gradle Plugin : ERROR : " + e.toString());
             throw new QTMException(
-                    "Could not upload file '" + filePath + "' to test suite '" + testSuiteName + "'!");
+                    "Could not upload file '" + filePath + "' to test suite!");
         } finally {
             try {
                 httpClient.close();
@@ -299,7 +305,7 @@ public class QTMApiConnection {
             }
         }
     }
-
+	/*
     public Map<Long, String> getProjectList() throws QTMException {
         Map<Long, String> projectList = null;
         try {
@@ -488,4 +494,5 @@ public class QTMApiConnection {
         }
         return projectsInfoJson;
     }
+	*/
 }

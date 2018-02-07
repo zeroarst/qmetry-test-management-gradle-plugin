@@ -1,4 +1,4 @@
-package com.icpl;
+package com.qmetry;
 
 public class QTMException extends Exception
 {
