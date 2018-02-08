@@ -9,6 +9,12 @@ import java.io.File;
 
 public class QTMResultsPublisher extends DefaultTask 
 {
+	public QTMResultsPublisher()
+	{
+		setDescription("Ship high quality products, faster by linking automated test results from Gradle to QMetry Test Management");
+		setGroup("QMetry Test Management");
+	}
+	
     @TaskAction
     public void publishResults() throws QTMException
 	{
