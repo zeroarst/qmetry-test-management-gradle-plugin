@@ -9,6 +9,6 @@ public class QTMGradlePlugin implements Plugin<Project>
     public void apply(Project project) 
 	{
         project.getExtensions().create("qtmConfig", QTMGradleExtension.class);
-        project.getTasks().create("publishResultsToQTM", QTMResultsPublisher.class);
+        project.getTasks().create("qtmUploadResults", QTMResultsPublisher.class);
     }
 }
