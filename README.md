@@ -7,7 +7,10 @@ QTMGradlePlugin uploads result file(s) generated in a Gradle project to QTM Ente
 
 Use the plugin from anywhere in your gradle project, by including the following code in 'build.gradle' file...
 ```
-apply plugin: 'com.qmetry.QTMGradlePlugin'
+plugins
+{
+	id 'com.qmetry.QTMGradlePlugin' version '1.0'
+}
 
 qtmConfig
 {
@@ -23,18 +26,6 @@ qtmConfig
 	build='Demo Build'
 }
 
-buildscript
-{
-    repositories
-	{
-        mavenLocal()
-		mavenCentral()
-    }
-    dependencies
-	{
-        classpath 'com.qmetry:QTMGradlePlugin:1.0'
-    }
-}
 ```
 
 Use the following command from your project.
