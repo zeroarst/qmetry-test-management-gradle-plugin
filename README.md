@@ -7,7 +7,10 @@ QTMGradlePlugin uploads result file(s) generated in a Gradle project to QTM Ente
 
 Use the plugin from anywhere in your gradle project, by including the following code in 'build.gradle' file...
 ```
-apply plugin: 'com.qmetry.QTMGradlePlugin'
+plugins
+{
+    id 'com.qmetry.QTMGradlePlugin' version '1.1'
+}
 
 qtmConfig
 {
@@ -16,6 +19,7 @@ qtmConfig
 	automationFramework='JUNIT'
 	testResultFilePath='/test-results/test/TEST-ispl.sample.AppSecondTest.xml'
 	testSuiteId='STR-TS-01'
+	testSuiteName='Demo Testsuite'
 	project='Demo Project'
 	platform='Chrome'
 	release='Default Release'
@@ -23,18 +27,6 @@ qtmConfig
 	build='Demo Build'
 }
 
-buildscript
-{
-    repositories
-	{
-        mavenLocal()
-		mavenCentral()
-    }
-    dependencies
-	{
-        classpath 'com.qmetry:QTMGradlePlugin:1.0'
-    }
-}
 ```
 
 Use the following command from your project.
@@ -50,7 +42,8 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 * **qtmAutomationApiKey** - Automation Key
 * **automationFramework** - JUNIT/TESTNG/CUCUMBER/QAS/HPUFT
 * **testResultFilePath** - Path to result file (or directory for multiple files) relative to build directory
-* **testSuiteId (optional)** - Id or Entity key of the target test suite.
+* **testSuiteId (optional)** - Id or Entity key of the test suite (This will upload results to existing test suite)
+* **testSuiteName (Optional)** - Test suite name (This will create a new test suite with given name)
 * **project** - Project Id or Project Key or Project name
 * **platform (Optional)** - Platform Id or Platform Name
 * **release (Optional)** - Release Id or Release name

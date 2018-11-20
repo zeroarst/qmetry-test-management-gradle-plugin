@@ -9,6 +9,7 @@ public class QTMGradleExtension
 	private String automationFramework;
 	private String testResultFilePath;
 	private String testSuiteId;
+	private String testSuiteName;
 	private String platform;
 	private String project;
 	private String release;
@@ -33,6 +34,11 @@ public class QTMGradleExtension
 
 	public String getTestSuiteId() {
 		return this.testSuiteId;
+	}
+	
+	public String getTestSuiteName()
+	{
+		return this.testSuiteName;
 	}
 
 	public String getPlatform() {
@@ -148,6 +154,10 @@ public class QTMGradleExtension
 	
 	public void setTestSuiteId(String testId) {
 		this.testSuiteId = testId.trim();
+	}
+	
+	public void setTestSuiteName(String testSuiteName) {
+		this.testSuiteName = testSuiteName.trim();
 	}
 	
 	public void setPlatform(String name)

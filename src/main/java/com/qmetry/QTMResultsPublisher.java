@@ -46,6 +46,7 @@ public class QTMResultsPublisher extends DefaultTask
 					System.out.println(pluginName + " : Uploading result file...");
 					conn.uploadFileToTestSuite(zipFilePath,
 												config.getParsedTestSuiteId(),
+												config.getTestSuiteName(),
 												config.getParsedAutomationFramework(),
 												config.getParsedProject(),
 												config.getParsedRelease(),
@@ -92,6 +93,7 @@ public class QTMResultsPublisher extends DefaultTask
 					System.out.println(pluginName + " : Uploading result file...");
 					conn.uploadFileToTestSuite(compfilepath, 
 												config.getParsedTestSuiteId(), 
+												config.getTestSuiteName(),
 												config.getParsedAutomationFramework(),
 												config.getParsedProject(),
 												config.getParsedRelease(),

@@ -50,7 +50,7 @@ public class QTMApiConnection {
         return true;
     }
 
-    public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String automationFramework, String project, String release, String cycle, String build, String platform)
+    public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String testSuiteName, String automationFramework, String project, String release, String cycle, String build, String platform)
     throws InvalidCredentialsException, ProtocolException, IOException, QTMException 
 	{
 		String pluginName = "QMetry Test Management Gradle Plugin";
@@ -64,6 +64,11 @@ public class QTMApiConnection {
 				System.out.println(pluginName + " : TestSuiteId : " + testSuiteId);
 				builder.addTextBody("testsuiteId", testSuiteId, ContentType.TEXT_PLAIN);
             }
+			if(testSuiteName!=null && !testSuiteName.isEmpty())
+			{
+				System.out.println(pluginName + " : TestSuiteName : " + testSuiteName);
+				builder.addTextBody("testsuiteName", testSuiteName, ContentType.TEXT_PLAIN);
+			}
 			if(project!=null && !project.isEmpty())
 			{	
 				System.out.println(pluginName + " : Project : " + project);
