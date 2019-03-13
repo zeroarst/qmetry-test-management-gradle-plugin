@@ -50,7 +50,7 @@ public class QTMApiConnection {
         return true;
     }
 
-    public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String testSuiteName, String automationFramework, String project, String release, String cycle, String build, String platform)
+    public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String testSuiteName, String automationFramework, String automationHierarchy, String project, String release, String cycle, String build, String platform)
     throws InvalidCredentialsException, ProtocolException, IOException, QTMException 
 	{
 		String pluginName = "QMetry Test Management Gradle Plugin";
@@ -59,6 +59,18 @@ public class QTMApiConnection {
         try {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addTextBody("entityType", automationFramework, ContentType.TEXT_PLAIN);
+            if(automationHierarchy!=null && !automationHierarchy.isEmpty())
+            {
+                if(automationFramework.equals("JUNIT") || automationFramework.equals("TESTNG"))
+                {
+                    System.out.println(pluginName + " : Automation Hierarchy : " + automationHierarchy);
+                    builder.addTextBody("automationHierarchy", automationHierarchy);
+                }
+                else
+                {
+                    System.out.println(pluginName + " : Skipping automationHierarchy becuase it is not supported for framework: " + automationFramework);
+                }
+            }
 			if(testSuiteId!=null && !testSuiteId.isEmpty())
 			{
 				System.out.println(pluginName + " : TestSuiteId : " + testSuiteId);

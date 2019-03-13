@@ -9,7 +9,7 @@ Use the plugin from anywhere in your gradle project, by including the following 
 ```
 plugins
 {
-    id 'com.qmetry.QTMGradlePlugin' version '1.1'
+    id 'com.qmetry.QTMGradlePlugin' version '1.2'
 }
 
 qtmConfig
@@ -18,6 +18,7 @@ qtmConfig
 	qtmAutomationApiKey='zEzs7iy77D8ARWX8xMFzJRZTzb66W0LCyaK6xdec'
 	automationFramework='JUNIT'
 	testResultFilePath='/test-results/test/TEST-ispl.sample.AppSecondTest.xml'
+	automationHierarchy='1'
 	testSuiteId='STR-TS-01'
 	testSuiteName='Demo Testsuite'
 	project='Demo Project'
@@ -42,6 +43,14 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 * **qtmAutomationApiKey** - Automation Key
 * **automationFramework** - JUNIT/TESTNG/CUCUMBER/QAS/HPUFT
 * **testResultFilePath** - Path to result file (or directory for multiple files) relative to build directory
+* **automationHierarchy (optional)** - Hierarchy which will be used to parse test result files on QTM for JUnit and TestNG (In case of other frameworks automationHierarchy will be skipped if provided)
+  * JUnit 
+    * 1 - Use current Hierarchy in which JUnit Testcase is treated as TestStep and Testsuite is treated as Testcase
+    * 2 - Use Junit Testcase as Testcase and link all those (from all testsuites and all files of Junit) to one Testsuite
+    * 3 - Create Multiple Testsuites and then link their respective testcases in corresponding Testsuites
+  * TestNG
+    * 1 - Use class as Testcase and test-method as TestStep
+    * 2 - Use test-method as Testcase
 * **testSuiteId (optional)** - Id or Entity key of the test suite (This will upload results to existing test suite)
 * **testSuiteName (Optional)** - Test suite name (This will create a new test suite with given name)
 * **project** - Project Id or Project Key or Project name

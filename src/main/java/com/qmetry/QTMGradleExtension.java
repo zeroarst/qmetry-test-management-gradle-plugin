@@ -7,6 +7,7 @@ public class QTMGradleExtension
 	private String qtmUrl;
 	private String qtmAutomationApiKey;
 	private String automationFramework;
+	private String automationHierarchy;
 	private String testResultFilePath;
 	private String testSuiteId;
 	private String testSuiteName;
@@ -20,34 +21,52 @@ public class QTMGradleExtension
 		return this.qtmUrl;
 	}
 
-	public String getQtmAutomationApiKey() {
+	/* public String getQtmAutomationApiKey() {
 		return this.qtmAutomationApiKey;
-	}
+	} */
 
-	public String getAutomationFramework() {
+	/* public String getAutomationFramework() {
 		return this.automationFramework;
+	} */
+
+	public String getParsedAutomationHierarchy() throws QTMException{
+		if(automationFramework.equals("JUNIT"))
+		{
+			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2") || automationHierarchy.equals("3")))
+			{
+				throw new QTMException("Please provide valid Automation Hierarchy for automationFramework " + automationFramework + " in qtmConfig block as 'automationHierarchy'");
+			}
+		}
+		else if(automationFramework.equals("TESTNG"))
+		{
+			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2")))
+			{
+				throw new QTMException("Please provide valid Automation Hierarchy for automationFramework " + automationFramework + " in qtmConfig block as 'automationHierarchy'");
+			}
+		}
+		return this.automationHierarchy;
 	}
 
-	public String getTestResultFilePath() {
+	/* public String getTestResultFilePath() {
 		return this.testResultFilePath;
-	}
+	} */
 
-	public String getTestSuiteId() {
+	/* public String getTestSuiteId() {
 		return this.testSuiteId;
-	}
+	} */
 	
 	public String getTestSuiteName()
 	{
 		return this.testSuiteName;
 	}
 
-	public String getPlatform() {
+	/* public String getPlatform() {
 		return this.platform;
-	}
+	} */
 
-	public String getBuild() {
+	/* public String getBuild() {
 		return this.build;
-	}
+	} */
 	
 	public String getParsedQtmUrl() throws QTMException 
 	{
@@ -146,6 +165,10 @@ public class QTMGradleExtension
 	public void setAutomationFramework(String autoFramework)
 	{
 		this.automationFramework = autoFramework.trim();
+	}
+
+	public void setAutomationHierarchy(String automationHierarchy) {
+		this.automationHierarchy = automationHierarchy.trim();
 	}
 
 	public void setTestResultFilePath(String testResultFilePath) {

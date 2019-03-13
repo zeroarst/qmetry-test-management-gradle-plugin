@@ -90,6 +90,14 @@ public class CreateZip
 		FileOutputStream fout = new FileOutputStream(zipFile,false);
 		ZipOutputStream zout = new ZipOutputStream(fout);
 		zipSubDirectory("", dir, zout,extention);
+		if(formats.equals("QAS"))
+		{
+			File img = new File(sourceDir + "/img");
+			if(img.exists())
+			{
+				zipSubDirectory("img/", img, zout, "png");
+			}
+		}
 		zout.close();
 		ZipFile zf = null;
 		try
@@ -120,6 +128,10 @@ public class CreateZip
 		else if(extention.equals("json"))
 		{
 			files = dir.listFiles(JSON_FILE_FILTER);
+		}
+		else if(extention.equals("png"))
+		{
+			files = dir.listFiles();
 		}
 		if(files!=null)
 		{

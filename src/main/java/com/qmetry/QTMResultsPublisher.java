@@ -48,31 +48,13 @@ public class QTMResultsPublisher extends DefaultTask
 												config.getParsedTestSuiteId(),
 												config.getTestSuiteName(),
 												config.getParsedAutomationFramework(),
+												config.getParsedAutomationHierarchy(),
 												config.getParsedProject(),
 												config.getParsedRelease(),
 												config.getParsedCycle(),
 												config.getParsedBuild(),
 												config.getParsedPlatform());
 					System.out.println(pluginName + " : Result file successfully uploaded!");
-					/*File[] listOfFiles = resultFile.listFiles();
-
-					for (int i = 0; i < listOfFiles.length; i++) 
-					{
-						if (listOfFiles[i].isFile() && (listOfFiles[i].getName().endsWith(".xml") || listOfFiles[i].getName().endsWith(".json"))) 
-						{
-							System.out.println("\n" +pluginName+ " : Result File Found '" + listOfFiles[i].getName() + "'");
-							System.out.println(pluginName + " : Uploading result file...");
-							conn.uploadFileToTestSuite(listOfFiles[i].getAbsolutePath(), 
-														config.getParsedTestSuiteName(),
-														config.getParsedAutomationFramework(), 
-														config.getParsedProjectName(),
-														config.getParsedReleaseName(),
-														config.getParsedCycleName(),
-														config.getParsedBuildName(), 
-														config.getParsedPlatformName());
-							System.out.println(pluginName + " : Result file successfully uploaded!");
-						}
-					}*/
 				} 
 				else if(resultFile.isFile())
 				{
@@ -95,6 +77,7 @@ public class QTMResultsPublisher extends DefaultTask
 												config.getParsedTestSuiteId(), 
 												config.getTestSuiteName(),
 												config.getParsedAutomationFramework(),
+												config.getParsedAutomationHierarchy(),
 												config.getParsedProject(),
 												config.getParsedRelease(),
 												config.getParsedCycle(),
