@@ -51,7 +51,7 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
   * TestNG
     * 1 - Use 'class' tag as Testcase and 'test-method' tag as TestStep
     * 2 - Use 'test-method' tag as Testcase
-		* 3 - Use 'test' tag as Testcase and 'test-method' tag as TestStep
+    * 3 - Use 'test' tag as Testcase and 'test-method' tag as TestStep
 * **testSuiteId (optional)** - Id or Entity key of the test suite (This will upload results to existing test suite)
 * **testSuiteName (Optional)** - Test suite name (This will create a new test suite with given name)
 * **project** - Project Id or Project Key or Project name
