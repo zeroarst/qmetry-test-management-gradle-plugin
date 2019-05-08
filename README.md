@@ -49,8 +49,9 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
     * 2 - Use Junit Testcase as Testcase and link all those (from all testsuites and all files of Junit) to one Testsuite
     * 3 - Create Multiple Testsuites and then link their respective testcases in corresponding Testsuites
   * TestNG
-    * 1 - Use class as Testcase and test-method as TestStep
-    * 2 - Use test-method as Testcase
+    * 1 - Use 'class' tag as Testcase and 'test-method' tag as TestStep
+    * 2 - Use 'test-method' tag as Testcase
+		* 3 - Use 'test' tag as Testcase and 'test-method' tag as TestStep
 * **testSuiteId (optional)** - Id or Entity key of the test suite (This will upload results to existing test suite)
 * **testSuiteName (Optional)** - Test suite name (This will create a new test suite with given name)
 * **project** - Project Id or Project Key or Project name

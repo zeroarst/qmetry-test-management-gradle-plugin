@@ -39,7 +39,7 @@ public class QTMGradleExtension
 		}
 		else if(automationFramework.equals("TESTNG"))
 		{
-			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2")))
+			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2") || automationHierarchy.equals("3")))
 			{
 				throw new QTMException("Please provide valid Automation Hierarchy for automationFramework " + automationFramework + " in qtmConfig block as 'automationHierarchy'");
 			}
