@@ -1,0 +1,4 @@
+.gradle/
+.gradle/buildOutputCleanup/
+.settings/org.eclipse.buildship.core.prefs
+bin/

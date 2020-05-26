@@ -1,76 +1,67 @@
-
-
 package com.qmetry;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 public class QTMGradleExtension
 {
 	private String qtmUrl;
 	private String qtmAutomationApiKey;
 	private String automationFramework;
-	private String automationHierarchy;
 	private String testResultFilePath;
-	private String testSuiteId;
-	private String testSuiteName;
+	private String testSuite;
 	private String platform;
+	private String build;
 	private String project;
 	private String release;
 	private String cycle;
-	private String build;
-	
+	private String testcaseFields;
+	private String testsuiteFields;
+	 
+
 	public String getQtmUrl() {
 		return this.qtmUrl;
 	}
 
-	/* public String getQtmAutomationApiKey() {
+	public String getQtmAutomationApiKey() {
 		return this.qtmAutomationApiKey;
-	} */
+	}
 
-	/* public String getAutomationFramework() {
+	public String getAutomationFramework() {
 		return this.automationFramework;
-	} */
-
-	public String getParsedAutomationHierarchy() throws QTMException{
-		if(automationFramework.equals("JUNIT"))
-		{
-			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2") || automationHierarchy.equals("3")))
-			{
-				throw new QTMException("Please provide valid Automation Hierarchy for automationFramework " + automationFramework + " in qtmConfig block as 'automationHierarchy'");
-			}
-		}
-		else if(automationFramework.equals("TESTNG"))
-		{
-			if(!(automationHierarchy.equals("1") || automationHierarchy.equals("2") || automationHierarchy.equals("3")))
-			{
-				throw new QTMException("Please provide valid Automation Hierarchy for automationFramework " + automationFramework + " in qtmConfig block as 'automationHierarchy'");
-			}
-		}
-		return this.automationHierarchy;
 	}
 
-	/* public String getTestResultFilePath() {
+	public String getTestResultFilePath() {
 		return this.testResultFilePath;
-	} */
-
-	/* public String getTestSuiteId() {
-		return this.testSuiteId;
-	} */
-	
-	public String getTestSuiteName()
-	{
-		return this.testSuiteName;
 	}
 
-	/* public String getPlatform() {
-		return this.platform;
-	} */
+	public String getTestSuite() {
+		return this.testSuite;
+	}
 
-	/* public String getBuild() {
+	public String getPlatform() {
+		return this.platform;
+	}
+
+	public String getBuild() {
 		return this.build;
-	} */
-	
+	}
+
+	public String getProject() {
+		return this.project;
+	}
+
+	public String getRelease() {
+		return this.release;
+	}
+
+	public String getCycle() {
+		return this.cycle;
+	}
+
 	public String getParsedQtmUrl() throws QTMException 
 	{
-		if(this.qtmUrl == null || this.qtmUrl.isEmpty())
+		if(this.qtmUrl == null)
 			throw new QTMException("Please provide your QMetry Test Management URL in qtmConfig block as 'qtmUrl'");
 		if(!this.qtmUrl.startsWith("http:/") && !this.qtmUrl.startsWith("https:/"))
 			throw new QTMException("Please provide a valid QMetry Test Management URL");
@@ -83,35 +74,75 @@ public class QTMGradleExtension
 	
 	public String getParsedQtmAutomationApiKey() throws QTMException
 	{
-		if(this.qtmAutomationApiKey == null || this.qtmAutomationApiKey.isEmpty())
+		if(this.qtmAutomationApiKey == null)
 			throw new QTMException("Please provide your QMetry Test Management Automation API Key in qtmConfig block as 'qtmAutomationApiKey'");
 		return this.qtmAutomationApiKey;
 	}
 	
 	public String getParsedTestResultFilePath() throws QTMException
 	{
-		if(this.testResultFilePath == null || this.testResultFilePath.isEmpty())
+		if(this.testResultFilePath==null)
+			throw new QTMException("Please provide your test result file path in qtmConfig block as 'testResultFilePath'");
+		String filePath = this.testResultFilePath.trim();
+		if(filePath.length()<2)
 			throw new QTMException("Please provide your test result file path in qtmConfig block as 'testResultFilePath'");
 		return this.testResultFilePath;
 	}
 	
-	public String getParsedPlatform()
+	public String getParsedProject() throws QTMException
 	{
-		if(this.platform == null || this.platform.isEmpty())
-			return "";
-		return this.platform;
+		if(this.project==null)
+			throw new QTMException("Please provide your qmetry project id, key or name in qtmConfig block as 'project'");
+		String temp_project = this.project.trim();
+		if(temp_project.length()<2)
+			throw new QTMException("Please provide your qmetry project id, key or name in qtmConfig block as 'project'");
+		return temp_project;
 	}
 	
-	public String getParsedTestSuiteId()
+	public String getParsedRelease() throws QTMException
 	{
-		if(this.testSuiteId == null || this.testSuiteId.isEmpty())
+		if(this.release==null)
 			return "";
-		return this.testSuiteId;
+		return this.release.trim();
+	}
+	
+	public String getParsedCycle() throws QTMException
+	{
+		if(this.cycle==null) {
+			return "";
+		} else {
+			if((this.release==null || this.release.trim().length()==0)) {
+				throw new QTMException("Please provide release value for cycle!");
+			} else {
+				return this.cycle.trim();
+			}
+		}
+	}
+	
+	public String getParsedBuild()
+	{
+		if(this.build == null)
+			return "";
+		return this.build.trim();
+	}
+	
+	public String getParsedPlatform()
+	{
+		if(this.platform == null)
+			return "";
+		return this.platform.trim();
+	}
+	
+	public String getParsedTestSuite()
+	{
+		if(this.testSuite == null)
+			return "";
+		return this.testSuite.trim();
 	}
 	
 	public String getParsedAutomationFramework() throws QTMException
 	{
-		if(this.automationFramework == null || this.automationFramework.isEmpty())
+		if(this.automationFramework == null)
 			throw new QTMException("Please provide your Automation Framework in qtmConfig block as 'automationFramework'");
 		if(!(this.automationFramework.equals("JUNIT") 
 			|| this.automationFramework.equals("TESTNG")
@@ -122,88 +153,93 @@ public class QTMGradleExtension
 		return this.automationFramework;
 	}
 	
-	public String getParsedProject() throws QTMException
-	{
-		if(this.project == null || this.project.isEmpty())
-			throw new QTMException("Please provide target project ID or Key or Name in qtmConfig block as 'project'");
-		return this.project;
-	}
-	
-	public String getParsedRelease() throws QTMException
-	{
-		if(this.release == null || this.release.isEmpty())
-			return "";
-		else if(this.project == null || this.project.isEmpty())
-			throw new QTMException("Please provide project in qtmConfig when release is provided");
-		return this.release;
-	}
-	public String getParsedCycle() throws QTMException
-	{
-		if(this.cycle == null || this.cycle.isEmpty())
-			return "";
-		else if(this.release == null || this.release.isEmpty())
-			throw new QTMException("Please provide release in qtmConfig when cycle is provided");
-		return this.cycle;
-	}
-	public String getParsedBuild() throws QTMException
-	{
-		if(this.build == null  || this.build.isEmpty())
-			return "";
-		else if(this.cycle == null || this.cycle.isEmpty())
-			throw new QTMException("Please provide cycle in qtmConfig when build is provided");
-		return this.build;
-	}
-	
 	public void setQtmUrl(String qtmApiUrl) {
-		this.qtmUrl = qtmApiUrl.trim();
+		this.qtmUrl = qtmApiUrl;
 	}
 
 	public void setQtmAutomationApiKey(String qtmApiKey) {
-		this.qtmAutomationApiKey = qtmApiKey.trim();
+		this.qtmAutomationApiKey = qtmApiKey;
 	}
 	
 	public void setAutomationFramework(String autoFramework)
 	{
-		this.automationFramework = autoFramework.trim();
-	}
-
-	public void setAutomationHierarchy(String automationHierarchy) {
-		this.automationHierarchy = automationHierarchy.trim();
+		this.automationFramework = autoFramework;
 	}
 
 	public void setTestResultFilePath(String testResultFilePath) {
-		this.testResultFilePath = testResultFilePath.trim();
+		this.testResultFilePath = testResultFilePath;
 	}
 	
-	public void setTestSuiteId(String testId) {
-		this.testSuiteId = testId.trim();
-	}
-	
-	public void setTestSuiteName(String testSuiteName) {
-		this.testSuiteName = testSuiteName.trim();
+	public void setTestSuite(String testName) {
+		this.testSuite = testName;
 	}
 	
 	public void setPlatform(String name)
 	{
-		this.platform = name.trim();
+		this.platform = name;
 	}
 	
+	public void setProject(String name)
+	{
+		this.project = name;
+	}
+	
+	public void setRelease(String name)
+	{
+		this.release = name;
+	}
+	
+	public void setCycle(String name)
+	{
+		this.cycle = name;
+	}
+	
+
 	public void setBuild(String name)
 	{
-		this.build = name.trim();
+		this.build = name;
 	}
-	public void setProject(String project)
-	{
-		this.project = project.trim();
+
+	public void setTestcase_fields(String testCaseFields) {
+		this.testcaseFields = testCaseFields;
+	}
+	public void setTestsuite_fields(String testSuiteFields) {
+		this.testsuiteFields = testSuiteFields;
+		
 	}
 	
-	public void setRelease(String release)
-	{
-		this.release = release.trim();
+	public String getTestcase_fields() {
+		return this.testcaseFields;
 	}
 	
-	public void setCycle(String cycle)
-	{
-		this.cycle = cycle.trim();
+	public String getTestsuite_fields() {
+		return this.testsuiteFields;
+	}
+	//   / / // / / / / // / /  // / // / / // / // // / / // / / / // // /
+	
+	public String getParsedTestCase_fields() throws QTMException{
+		if(this.testcaseFields == null)
+			return "";
+		try {
+		JSONParser parser = new JSONParser();
+        JSONObject j = (JSONObject) parser.parse(this.testcaseFields);
+		return j.toString();
+		}
+		catch(Exception ex){
+			throw new QTMException("Please provide correct Json data of Test case fields !");
+		}
+	}
+	
+	public String getParsedTestSuite_fields() throws QTMException{
+		if(this.testsuiteFields == null)
+			return "";
+		try {
+		JSONParser parser = new JSONParser();
+        JSONObject j = (JSONObject) parser.parse(this.testsuiteFields);
+		return j.toString();
+		}
+		catch(Exception ex){
+			throw new QTMException("Please provide correct Json data of Test suite fields !");
+		}
 	}
 }
