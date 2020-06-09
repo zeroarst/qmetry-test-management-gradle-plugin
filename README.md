@@ -74,6 +74,7 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 * In case of QAS enter path to the folder in which testresult folder will be created. Plugin will automatically fetch testresult folder and upload results.
 * Enter directory path to upload zip file plugin will create zip file and upload it to QMetry Test Management.
 * testsuiteFields parameter will be ignored if existing Test suite Id is used to upload results.
+* testsuiteFields and testcaseFields use "Field Name" as key in JSON.
 
 ### Step 4:Generate Test Result(s) for your project.
 

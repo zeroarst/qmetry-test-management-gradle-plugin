@@ -29,19 +29,11 @@ public class ZipUtils
 			zout = new ZipOutputStream(fout);
 			zipSubDirectory("", sourceDir, zout);
 			System.out.println("QMetry Test Management Gradle Plugin :  Zip file created successfully '"+zipFileName+"'");
+			zout.close();
 		}
 		catch(IOException e)
 		{
 			throw new QTMException("Failed to create zip archive in directory '"+sourceDir+"'");
-		}
-		finally
-		{
-			try {
-			if(fout != null) fout.close();
-			if(zout != null) zout.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
