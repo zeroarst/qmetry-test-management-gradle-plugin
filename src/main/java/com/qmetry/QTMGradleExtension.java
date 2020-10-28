@@ -1,7 +1,6 @@
 package com.qmetry;
 
 import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 public class QTMGradleExtension {
@@ -20,6 +19,7 @@ public class QTMGradleExtension {
     private String cycle;
     private String testcaseFields;
     private String testsuiteFields;
+    private String skipWarning;
     
     public String getQtmUrl() {
         return qtmUrl;
@@ -132,6 +132,14 @@ public class QTMGradleExtension {
     public void setTestsuiteFields(String testsuiteFields) {
         this.testsuiteFields = testsuiteFields;
     }
+    
+    public String getSkipWarning() {
+	return skipWarning;
+    }
+    
+    public void setSkipWarning(String skipwarning) {
+	this.skipWarning = skipwarning;
+    }
 
     public String getParsedQtmUrl() throws QTMException {
 	if (this.qtmUrl == null)
@@ -214,8 +222,8 @@ public class QTMGradleExtension {
     public String getParsedAutomationFramework() throws QTMException {
 	if (this.automationFramework == null)
 	    throw new QTMException("Please provide your Automation Framework in qtmConfig block as 'automationFramework'");
-	if (!(this.automationFramework.equals("JUNIT") || this.automationFramework.equals("TESTNG") || this.automationFramework.equals("QAS") || this.automationFramework.equals("CUCUMBER") || this.automationFramework.equals("HPUFT")))
-	    throw new QTMException("Automation Framework '" + automationFramework + "' not supported. Use [JUNIT TESTNG QAS CUCUMBER HPUFT]");
+	if (!(this.automationFramework.equals("JUNIT") || this.automationFramework.equals("TESTNG") || this.automationFramework.equals("QAS") || this.automationFramework.equals("CUCUMBER") || this.automationFramework.equals("HPUFT") || this.automationFramework.equals("ROBOT")))
+	    throw new QTMException("Automation Framework '" + automationFramework + "' not supported. Use [JUNIT TESTNG QAS CUCUMBER HPUFT ROBOT]");
 	return this.automationFramework;
     }
     
@@ -247,5 +255,11 @@ public class QTMGradleExtension {
 	} catch (Exception ex) {
 	    throw new QTMException("Please provide correct Json data of Test suite fields !");
 	}
+    }
+    
+    public String getParsedSkipWarning() {
+	if (this.skipWarning == null)
+	    return "";
+	return this.skipWarning.trim();
     }
 }

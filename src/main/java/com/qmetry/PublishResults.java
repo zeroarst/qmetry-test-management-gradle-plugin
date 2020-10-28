@@ -57,6 +57,9 @@ public class PublishResults extends DefaultTask {
 	    if (!config.getParsedTestsuiteFields().isEmpty()) {
 		System.out.println(pluginName + " : Using Test Suite Fields '" + config.getParsedTestsuiteFields() + "'");
 	    }
+	    if (!config.getParsedSkipWarning().isEmpty()) {
+		System.out.println(pluginName + " : Using Skip Warning '" + config.getParsedSkipWarning() + "'");
+	    }
 
 	    String compfilepath = getProject().getBuildDir().toString() + File.separator.toString() + config.getParsedTestResultFilePath();
 	    File resultFile = new File(compfilepath);
@@ -104,7 +107,8 @@ public class PublishResults extends DefaultTask {
 			    config.getParsedRelease(),
 			    config.getParsedCycle(),
 			    config.getParsedTestcaseFields(),
-			    config.getParsedTestsuiteFields());
+			    config.getParsedTestsuiteFields(),
+			    config.getParsedSkipWarning());
 		    System.out.println(pluginName + " : Result file successfully uploaded!");
 		} else if (resultFile.isDirectory()) {
 		    System.out.println(pluginName + " : Reading result files from Directory '" + compfilepath + "'");
@@ -125,7 +129,8 @@ public class PublishResults extends DefaultTask {
 				    config.getParsedRelease(),
 				    config.getParsedCycle(),
 				    config.getParsedTestcaseFields(),
-				    config.getParsedTestsuiteFields());
+				    config.getParsedTestsuiteFields(),
+				    config.getParsedSkipWarning());
 			    System.out.println(pluginName + " : Result file successfully uploaded!");
 			}
 		    }
@@ -143,7 +148,8 @@ public class PublishResults extends DefaultTask {
 			    config.getParsedRelease(),
 			    config.getParsedCycle(),
 			    config.getParsedTestcaseFields(),
-			    config.getParsedTestsuiteFields());
+			    config.getParsedTestsuiteFields(),
+			    config.getParsedSkipWarning());
 		    System.out.println(pluginName + " : Result file successfully uploaded!");
 		} else {
 		    throw new QTMException("Failed to read result file '" + compfilepath + "'");
