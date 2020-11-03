@@ -14,14 +14,11 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 
 public class QTMApiConnection {
 
     private String url;
     private String key;
-
-    private JSONObject projectInformationJson;
 
     public QTMApiConnection(String url, String key) {
 	this.url = url;
@@ -42,7 +39,7 @@ public class QTMApiConnection {
     }
 
     public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String testSuiteName, String automationFramework, String automationHierarchy, String buildName, String platformName, String project, String release, String cycle,
-	    String testCaseFields, String testSuiteFields) throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
+	    String testCaseFields, String testSuiteFields, String skipWarning) throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
 	CloseableHttpClient httpClient = null;
 	CloseableHttpResponse response = null;
 	try {
@@ -68,6 +65,9 @@ public class QTMApiConnection {
 		builder.addTextBody("testcase_fields", testCaseFields, ContentType.TEXT_PLAIN);
 	    if (testSuiteFields != null && !testSuiteFields.isEmpty())
 		builder.addTextBody("testsuite_fields", testSuiteFields, ContentType.TEXT_PLAIN);
+	    if (skipWarning != null && !skipWarning.isEmpty())
+		builder.addTextBody("skipWarning", skipWarning, ContentType.TEXT_PLAIN);
+	    
 
 	    File f = new File(filePath);
 	    builder.addPart("file", new FileBody(f));
@@ -98,5 +98,4 @@ public class QTMApiConnection {
 	    }
 	}
     }
-
 }
