@@ -39,12 +39,13 @@ public class QTMApiConnection {
     }
 
     public boolean uploadFileToTestSuite(String filePath, String testSuiteId, String testSuiteName, String automationFramework, String automationHierarchy, String buildName, String platformName, String project, String release, String cycle,
-	    String testCaseFields, String testSuiteFields, String skipWarning) throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
+	    String testCaseFields, String testSuiteFields) throws InvalidCredentialsException, ProtocolException, IOException, QTMException {
 	CloseableHttpClient httpClient = null;
 	CloseableHttpResponse response = null;
 	try {
 	    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 	    builder.addTextBody("entityType", automationFramework, ContentType.TEXT_PLAIN);
+	    builder.addTextBody("apiVersion","2", ContentType.TEXT_PLAIN);
 	    if (testSuiteId != null && !testSuiteId.isEmpty())
 		builder.addTextBody("testsuiteId", testSuiteId, ContentType.TEXT_PLAIN);
 	    if (testSuiteName != null && !testSuiteName.isEmpty())
@@ -64,10 +65,7 @@ public class QTMApiConnection {
 	    if (testCaseFields != null && !testCaseFields.isEmpty())
 		builder.addTextBody("testcase_fields", testCaseFields, ContentType.TEXT_PLAIN);
 	    if (testSuiteFields != null && !testSuiteFields.isEmpty())
-		builder.addTextBody("testsuite_fields", testSuiteFields, ContentType.TEXT_PLAIN);
-	    if (skipWarning != null && !skipWarning.isEmpty())
-		builder.addTextBody("skipWarning", skipWarning, ContentType.TEXT_PLAIN);
-	    
+		builder.addTextBody("testsuite_fields", testSuiteFields, ContentType.TEXT_PLAIN);	    
 
 	    File f = new File(filePath);
 	    builder.addPart("file", new FileBody(f));

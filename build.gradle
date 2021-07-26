@@ -27,7 +27,7 @@ repositories
 }
 
 group = 'com.qmetry'
-version = '1.5'
+version = '1.6'
 
 gradlePlugin {
   plugins {

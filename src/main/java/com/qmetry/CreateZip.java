@@ -81,7 +81,7 @@ public class CreateZip
 		{
 			extention="xml";
 		}
-		else if(formats.equals("CUCUMBER") || formats.equals("QAS"))
+		else if(formats.equals("CUCUMBER") || formats.equals("QAS") || formats.equals("JSON"))
 		{
 			extention="json";
 		}

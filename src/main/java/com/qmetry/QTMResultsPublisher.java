@@ -38,7 +38,7 @@ public class QTMResultsPublisher extends DefaultTask {
 		    System.out.println(pluginName + " : Reading result file '" + zipFilePath + "'");
 		    System.out.println(pluginName + " : Uploading result file...");
 		    conn.uploadFileToTestSuite(zipFilePath, config.getParsedTestSuiteId(), config.getTestSuiteName(), config.getParsedAutomationFramework(), config.getParsedAutomationHierarchy(), config.getParsedBuild(), config.getParsedPlatform(),
-			    config.getParsedProject(), config.getParsedRelease(), config.getParsedCycle(), config.getTestcaseFields(), config.getParsedTestsuiteFields(), config.getParsedSkipWarning());
+			    config.getParsedProject(), config.getParsedRelease(), config.getParsedCycle(), config.getTestcaseFields(), config.getParsedTestsuiteFields());
 		    System.out.println(pluginName + " : Result file successfully uploaded!");
 		} else if (resultFile.isFile()) {
 		    String format = config.getParsedAutomationFramework();
@@ -46,13 +46,13 @@ public class QTMResultsPublisher extends DefaultTask {
 			throw new QTMException(pluginName + " : For QAS enter path to directory not file.");
 		    } else if (compfilepath.endsWith(".xml") && !(format.equals("JUNIT") || format.equals("TESTNG") || format.equals("HPUFT") || format.equals("ROBOT"))) {
 			throw new QTMException(pluginName + " : Cannot upload xml file when AutomationFramework is " + format);
-		    } else if (!format.equals("CUCUMBER") && compfilepath.endsWith(".json")) {
+		    } else if (!(format.equals("CUCUMBER") || format.equals("JSON")) && compfilepath.endsWith(".json")) {
 			throw new QTMException(pluginName + " : Cannot upload json file when AutomationFramework is " + format);
 		    }
 		    System.out.println(pluginName + " : Reading result file '" + compfilepath + "'");
 		    System.out.println(pluginName + " : Uploading result file...");
 		    conn.uploadFileToTestSuite(compfilepath, config.getParsedTestSuiteId(), config.getTestSuiteName(), config.getParsedAutomationFramework(), config.getParsedAutomationHierarchy(), config.getParsedBuild(), config.getParsedPlatform(),
-			    config.getParsedProject(), config.getParsedRelease(), config.getParsedCycle(), config.getTestcaseFields(), config.getParsedTestsuiteFields(), config.getParsedSkipWarning());
+			    config.getParsedProject(), config.getParsedRelease(), config.getParsedCycle(), config.getTestcaseFields(), config.getParsedTestsuiteFields());
 		    System.out.println(pluginName + " : Result file successfully uploaded!");
 		} else {
 		    throw new QTMException("Failed to read result file '" + compfilepath + "'");
