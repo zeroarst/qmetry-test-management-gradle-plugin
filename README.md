@@ -19,7 +19,7 @@ Use the plugin from anywhere in your gradle project, by including the following 
 ```
 plugins
 {
-    id 'com.qmetry.QTMGradlePlugin' version '1.5'
+    id 'com.qmetry.QTMGradlePlugin' version '1.6'
 }
 
 qtmConfig
