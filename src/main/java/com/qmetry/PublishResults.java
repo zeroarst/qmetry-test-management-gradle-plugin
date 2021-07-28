@@ -67,44 +67,68 @@ public class PublishResults extends DefaultTask {
 	    synchronized (conn) {
 		String automationFramework = config.getParsedAutomationFramework();
 		if (automationFramework.equals("QAS")) {
-		    File dirs[] = resultFile.listFiles(new FilenameFilter() {
-			public boolean accept(File directory, String fileName) {
-			    return (directory.isDirectory() && fileName.length() == 20);
-			}
-		    });
 
-		    if (dirs == null) {
-			throw new QTMException("Could not find result file(s) at given path!");
-		    }
+		    if (resultFile.isFile()) {
+			System.out.println(pluginName + " : Reading result file '" + compfilepath + "'");
+			System.out.println(pluginName + " : Uploading result file...");
+			conn.uploadFileToTestSuite(compfilepath,
+				config.getParsedTestSuiteId(),
+				config.getParsedTestSuiteName(),
+				config.getParsedAutomationFramework(),
+				config.getParsedAutomationHierarchy(),
+				config.getParsedBuild(),
+				config.getParsedPlatform(),
+				config.getParsedProject(),
+				config.getParsedRelease(),
+				config.getParsedCycle(),
+				config.getParsedTestcaseFields(),
+				config.getParsedTestsuiteFields());
+			System.out.println(pluginName + " : Result file successfully uploaded!");			
 
-		    Long last_mod = Long.valueOf(0);
-		    File latest_dir = null;
-		    for (File adir : dirs) {
-			if (adir.isDirectory() && adir.lastModified() > last_mod) {
-			    latest_dir = adir;
-			    last_mod = adir.lastModified();
+		    } else if (resultFile.isDirectory()) {
+			System.out.println(pluginName + " : Reading result files from Directory '" + compfilepath + "'");
+			File dirs[] = resultFile.listFiles(new FilenameFilter() {
+			    public boolean accept(File directory, String fileName) {
+				return (directory.isDirectory());
+			    }
+			});
+
+			if (dirs == null) 
+			    throw new QTMException("Could not find result file(s) at given path!");
+
+			Long last_mod = Long.MIN_VALUE;
+			File latest_dir = null;			    
+			for (File adir : dirs) {
+			    if (adir.isDirectory() && adir.lastModified() > last_mod) {
+				latest_dir = adir;
+				last_mod = adir.lastModified();
+			    }
 			}
-		    }
-		    ZipUtils zipUtils = new ZipUtils("json");
-		    if (latest_dir == null)
-			throw new QTMException("Results' directory of type QAS not found in given directory '" + resultFile.getAbsolutePath() + "'");
-		    zipUtils.zipDirectory(latest_dir, "qmetry_result.zip");
-		    File zipArchive = new File(latest_dir, "qmetry_result.zip");
-		    if (zipArchive == null || !zipArchive.exists())
-			throw new QTMException("Failed to create zip archive for QAS results at directory '" + latest_dir.getAbsolutePath() + "'");
-		    conn.uploadFileToTestSuite(zipArchive.getAbsolutePath(),
-			    config.getParsedTestSuiteId(),
-			    config.getParsedTestSuiteName(),
-			    config.getParsedAutomationFramework(),
-			    config.getParsedAutomationHierarchy(),
-			    config.getParsedBuild(),
-			    config.getParsedPlatform(),
-			    config.getParsedProject(),
-			    config.getParsedRelease(),
-			    config.getParsedCycle(),
-			    config.getParsedTestcaseFields(),
-			    config.getParsedTestsuiteFields());
-		    System.out.println(pluginName + " : Result file successfully uploaded!");
+
+			ZipUtils zipUtils = new ZipUtils("json");
+			if (latest_dir == null)
+			    throw new QTMException("Results' directory of type QAS not found in given directory '" + resultFile.getAbsolutePath() + "'");
+			zipUtils.zipDirectory(latest_dir, "qmetry_result.zip");
+
+			File zipArchive = new File(latest_dir, "qmetry_result.zip");
+			if (zipArchive == null || !zipArchive.exists())
+			    throw new QTMException("Failed to create zip archive for QAS results at directory '" + latest_dir.getAbsolutePath() + "'");
+
+			System.out.println(pluginName + " : Uploading zip file...");
+			conn.uploadFileToTestSuite(zipArchive.getAbsolutePath(),
+				config.getParsedTestSuiteId(),
+				config.getParsedTestSuiteName(),
+				config.getParsedAutomationFramework(),
+				config.getParsedAutomationHierarchy(),
+				config.getParsedBuild(),
+				config.getParsedPlatform(),
+				config.getParsedProject(),
+				config.getParsedRelease(),
+				config.getParsedCycle(),
+				config.getParsedTestcaseFields(),
+				config.getParsedTestsuiteFields());
+			System.out.println(pluginName + " : Result file successfully uploaded!");
+		    }		  	
 		} else if (resultFile.isDirectory()) {
 		    System.out.println(pluginName + " : Reading result files from Directory '" + compfilepath + "'");
 		    File[] listOfFiles = resultFile.listFiles();
