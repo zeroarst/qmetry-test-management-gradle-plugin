@@ -42,8 +42,8 @@ public class QTMResultsPublisher extends DefaultTask {
 		    System.out.println(pluginName + " : Result file successfully uploaded!");
 		} else if (resultFile.isFile()) {
 		    String format = config.getParsedAutomationFramework();
-		    if (format.equals("QAS")) {
-			throw new QTMException(pluginName + " : For QAS enter path to directory not file.");
+		    if (format.equals("QAS") && !compfilepath.endsWith(".zip")) {
+			throw new QTMException(pluginName + " : For QAS enter path to a directory or to a zip file.");
 		    } else if (compfilepath.endsWith(".xml") && !(format.equals("JUNIT") || format.equals("TESTNG") || format.equals("HPUFT") || format.equals("ROBOT"))) {
 			throw new QTMException(pluginName + " : Cannot upload xml file when AutomationFramework is " + format);
 		    } else if (!(format.equals("CUCUMBER") || format.equals("JSON")) && compfilepath.endsWith(".json")) {
