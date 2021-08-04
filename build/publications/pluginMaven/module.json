@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.7",
-      "buildId": "ivjou5pusbci3gybghm4tiqq7e"
+      "buildId": "qho56cy7p5fu3mmetl52igbgiy"
     }
   },
   "variants": [
@@ -24,52 +24,15 @@
         "org.gradle.libraryelements": "jar",
         "org.gradle.usage": "java-api"
       },
-      "dependencies": [
-        {
-          "group": "org.apache.httpcomponents",
-          "module": "httpclient",
-          "version": {
-            "requires": "4.5.4"
-          }
-        },
-        {
-          "group": "org.apache.httpcomponents",
-          "module": "httpmime",
-          "version": {
-            "requires": "4.5.4"
-          }
-        },
-        {
-          "group": "com.googlecode.json-simple",
-          "module": "json-simple",
-          "version": {
-            "requires": "1.1.1"
-          }
-        },
-        {
-          "group": "commons-httpclient",
-          "module": "commons-httpclient",
-          "version": {
-            "requires": "3.1"
-          }
-        },
-        {
-          "group": "commons-io",
-          "module": "commons-io",
-          "version": {
-            "requires": "2.6"
-          }
-        }
-      ],
       "files": [
         {
           "name": "QTMGradlePlugin-1.6.jar",
           "url": "QTMGradlePlugin-1.6.jar",
-          "size": 20368,
-          "sha512": "555a1b7643d7a6a11930d133483a4c0b708579f9df8bcd01776f47dc8cfec044cfc53428e4db0f7b1ab26e764fd27395647a875cb2351917b5dbc4d0bfc25d85",
-          "sha256": "b4e93f6119fbb46fa4a2ea44e953b82281352d21224c48c8b3984d8726c4b008",
-          "sha1": "3319f87988a819aa13f79446441558528072db8d",
-          "md5": "1625469eb32e81d63ed97eaaca8d8a44"
+          "size": 20683,
+          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
+          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
+          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
+          "md5": "c2e1deee1843f51a90e457940bc12602"
         }
       ]
     },
@@ -123,11 +86,11 @@
         {
           "name": "QTMGradlePlugin-1.6.jar",
           "url": "QTMGradlePlugin-1.6.jar",
-          "size": 20368,
-          "sha512": "555a1b7643d7a6a11930d133483a4c0b708579f9df8bcd01776f47dc8cfec044cfc53428e4db0f7b1ab26e764fd27395647a875cb2351917b5dbc4d0bfc25d85",
-          "sha256": "b4e93f6119fbb46fa4a2ea44e953b82281352d21224c48c8b3984d8726c4b008",
-          "sha1": "3319f87988a819aa13f79446441558528072db8d",
-          "md5": "1625469eb32e81d63ed97eaaca8d8a44"
+          "size": 20683,
+          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
+          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
+          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
+          "md5": "c2e1deee1843f51a90e457940bc12602"
         }
       ]
     }

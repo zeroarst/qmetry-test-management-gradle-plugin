@@ -69,22 +69,27 @@ public class PublishResults extends DefaultTask {
 		if (automationFramework.equals("QAS")) {
 
 		    if (resultFile.isFile()) {
-			System.out.println(pluginName + " : Reading result file '" + compfilepath + "'");
-			System.out.println(pluginName + " : Uploading result file...");
-			conn.uploadFileToTestSuite(compfilepath,
-				config.getParsedTestSuiteId(),
-				config.getParsedTestSuiteName(),
-				config.getParsedAutomationFramework(),
-				config.getParsedAutomationHierarchy(),
-				config.getParsedBuild(),
-				config.getParsedPlatform(),
-				config.getParsedProject(),
-				config.getParsedRelease(),
-				config.getParsedCycle(),
-				config.getParsedTestcaseFields(),
-				config.getParsedTestsuiteFields());
-			System.out.println(pluginName + " : Result file successfully uploaded!");			
-
+			String fileExtensionJson=getExtensionOfFile(resultFile);
+			String extension = "zip";
+			if(extension.equalsIgnoreCase(fileExtensionJson)) {
+			    System.out.println(pluginName + " : Reading result file '" + compfilepath + "'");
+			    System.out.println(pluginName + " : Uploading result file...");
+			    conn.uploadFileToTestSuite(compfilepath,
+				    config.getParsedTestSuiteId(),
+				    config.getParsedTestSuiteName(),
+				    config.getParsedAutomationFramework(),
+				    config.getParsedAutomationHierarchy(),
+				    config.getParsedBuild(),
+				    config.getParsedPlatform(),
+				    config.getParsedProject(),
+				    config.getParsedRelease(),
+				    config.getParsedCycle(),
+				    config.getParsedTestcaseFields(),
+				    config.getParsedTestsuiteFields());
+			    System.out.println(pluginName + " : Result file successfully uploaded!");
+			} else {
+			    throw new QTMException("Upload .Zip file or configure Directory to upload QAS results.");
+			}
 		    } else if (resultFile.isDirectory()) {
 			System.out.println(pluginName + " : Reading result files from Directory '" + compfilepath + "'");
 			File dirs[] = resultFile.listFiles(new FilenameFilter() {
@@ -178,5 +183,18 @@ public class PublishResults extends DefaultTask {
 	    System.out.println(pluginName + " : ERROR : " + e.toString());
 	}
 	System.out.println("\n" + pluginName + " : Finished Post Build Action!");
+    }
+    
+    private static String getExtensionOfFile(File file) {
+
+	String fileExtension="";
+	// Get file Name first
+	String fileName=file.getName();
+
+	// If fileName do not contain "." or starts with "." then it is not a valid file
+	if(fileName.contains(".") && fileName.lastIndexOf(".")!= 0) 
+	    fileExtension=fileName.substring(fileName.lastIndexOf(".")+1);
+
+	return fileExtension;
     }
 }
