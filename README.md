@@ -19,7 +19,7 @@ Use the plugin from anywhere in your gradle project, by including the following 
 ```
 plugins
 {
-    id 'com.qmetry.QTMGradlePlugin' version '1.5'
+    id 'com.qmetry.QTMGradlePlugin' version '1.6'
 }
 
 qtmConfig
@@ -38,7 +38,6 @@ qtmConfig
 	build='Demo Build'
 	testcaseFields = '{"description":"Automated Test case","testCaseType":"Security","testCaseState":"Rejected","component":["x"],"priority":"Blocker","testcaseOwner":"Jack","estimatedTime":"143","userDefinedFields":{"Integrate":"Custom Field Testsuite"}}'
 	testsuiteFields = '{"description":"Automated Test suite","testsuiteOwner":"Jack","testSuiteState":"New","userDefinedFields":{"Integrate":"Custom Field Testsuite"}}'
-	skipWarning = '1'
 }
 ```
 
@@ -46,7 +45,7 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 
 * **qtmUrl** - Url to QMetry Test Management instance
 * **qtmAutomationApiKey** - Automation Key
-* **automationFramework** - JUNIT/TESTNG/CUCUMBER/QAS/HPUFT/ROBOT
+* **automationFramework** - JUNIT/TESTNG/CUCUMBER/QAS/HPUFT/ROBOT/JSON
 * **testResultFilePath** - Path to result file (or directory for multiple files) relative to build directory
 * **automationHierarchy (optional)** - Hierarchy which will be used to parse test result files on QTM for JUnit and TestNG (In case of other frameworks automationHierarchy will be skipped if provided)
   * JUnit 
@@ -66,9 +65,6 @@ The task publishResultsToQTM always looks for qtmConfig in build.gradle file of 
 * **build (Optional)** - Build Id or Build name
 * **Test Case Fields (Optional)** - Mention system defined fields and user defined fields for test case as shown in  Test Case JSON format below. All the mandatory fields other than Summary should be mentioned in this parameter.
 * **Test Suite Fields (Optional)** - Mention system defined fields and user defined fields for test case as shown in  Test Suite JSON format below. All the mandatory fields other than Summary should be mentioned in this parameter. This parameter will be ignored if existing Test suite Id is used to upload results. 
-* **skipWarning (Optional)** - To skip test case summary length warning or not skipped
-    * 0 - Test Case Import will be failed if the result file contains test case summary with more than 255 characters.
-    * 1 - Test Cases can be imported by ignoring the warning about summary length. If the test case summary is longer, it will be truncated to 255 characters.	
 
 #### Important Points
 * Automation Hierarchy which will be used to parse test result files on QTM is only supported for TestNG and JUnit framework.

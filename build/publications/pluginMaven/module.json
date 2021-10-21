@@ -1,0 +1,98 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.qmetry",
+    "module": "QTMGradlePlugin",
+    "version": "1.6",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.7",
+      "buildId": "qho56cy7p5fu3mmetl52igbgiy"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "QTMGradlePlugin-1.6.jar",
+          "url": "QTMGradlePlugin-1.6.jar",
+          "size": 20683,
+          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
+          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
+          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
+          "md5": "c2e1deee1843f51a90e457940bc12602"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.apache.httpcomponents",
+          "module": "httpclient",
+          "version": {
+            "requires": "4.5.4"
+          }
+        },
+        {
+          "group": "org.apache.httpcomponents",
+          "module": "httpmime",
+          "version": {
+            "requires": "4.5.4"
+          }
+        },
+        {
+          "group": "com.googlecode.json-simple",
+          "module": "json-simple",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "commons-httpclient",
+          "module": "commons-httpclient",
+          "version": {
+            "requires": "3.1"
+          }
+        },
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.6"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "QTMGradlePlugin-1.6.jar",
+          "url": "QTMGradlePlugin-1.6.jar",
+          "size": 20683,
+          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
+          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
+          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
+          "md5": "c2e1deee1843f51a90e457940bc12602"
+        }
+      ]
+    }
+  ]
+}

@@ -6,17 +6,17 @@ plugins {
 
 
 apply plugin: 'groovy'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 
 dependencies 
 {
-    compile gradleApi()
-	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4'
-	compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.4'
-	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-	compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
-	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    implementation gradleApi()
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.4'
+	implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.4'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	implementation group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 repositories 
@@ -27,7 +27,7 @@ repositories
 }
 
 group = 'com.qmetry'
-version = '1.5'
+version = '1.6'
 
 gradlePlugin {
   plugins {
