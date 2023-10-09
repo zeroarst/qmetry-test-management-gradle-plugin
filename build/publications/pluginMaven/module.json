@@ -1,17 +1,16 @@
 {
   "formatVersion": "1.1",
   "component": {
-    "group": "com.qmetry",
+    "group": "io.github.zeroarst",
     "module": "QTMGradlePlugin",
-    "version": "1.6",
+    "version": "0.1.7",
     "attributes": {
       "org.gradle.status": "release"
     }
   },
   "createdBy": {
     "gradle": {
-      "version": "6.7",
-      "buildId": "qho56cy7p5fu3mmetl52igbgiy"
+      "version": "7.5.1"
     }
   },
   "variants": [
@@ -20,19 +19,30 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
-        "org.gradle.jvm.version": 8,
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
         "org.gradle.libraryelements": "jar",
-        "org.gradle.usage": "java-api"
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
       },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.7.21"
+          }
+        }
+      ],
       "files": [
         {
-          "name": "QTMGradlePlugin-1.6.jar",
-          "url": "QTMGradlePlugin-1.6.jar",
-          "size": 20683,
-          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
-          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
-          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
-          "md5": "c2e1deee1843f51a90e457940bc12602"
+          "name": "QTMGradlePlugin-0.1.7.jar",
+          "url": "QTMGradlePlugin-0.1.7.jar",
+          "size": 25271,
+          "sha512": "5333df9b0904f4a4ddf54a8fc3291dbcccf02cad707e307579ae9e62f3cba23be5d184bb4defe60ee4f12f58626eab210130a145b63f1ed8c17ce21891ee47c2",
+          "sha256": "addcb8cacc44085f3fd700ec61af513757eabfdd034fdbc53246d0b190dff21d",
+          "sha1": "033fbd91918541139f3144487dc80a75ac1b7856",
+          "md5": "3485b45ee2124cddba3ba2fb415f2c2c"
         }
       ]
     },
@@ -41,9 +51,11 @@
       "attributes": {
         "org.gradle.category": "library",
         "org.gradle.dependency.bundling": "external",
-        "org.gradle.jvm.version": 8,
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
         "org.gradle.libraryelements": "jar",
-        "org.gradle.usage": "java-runtime"
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
       },
       "dependencies": [
         {
@@ -80,17 +92,64 @@
           "version": {
             "requires": "2.6"
           }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.7.21"
+          }
         }
       ],
       "files": [
         {
-          "name": "QTMGradlePlugin-1.6.jar",
-          "url": "QTMGradlePlugin-1.6.jar",
-          "size": 20683,
-          "sha512": "fd0d1248e49c91b8d863b350a31af75bb1ce9e2eabe35dbd0e74ef5443aa651850aef3edb3549155a83edd6818237ddde32cdea416ee1c82a2c7abbf3fa8bc65",
-          "sha256": "d35bf083192f3cb561f21353ea047732c5e5610501399281670630f6a9765ef0",
-          "sha1": "0632ecb1a866deb1d78b7f68a5785fef5169af5b",
-          "md5": "c2e1deee1843f51a90e457940bc12602"
+          "name": "QTMGradlePlugin-0.1.7.jar",
+          "url": "QTMGradlePlugin-0.1.7.jar",
+          "size": 25271,
+          "sha512": "5333df9b0904f4a4ddf54a8fc3291dbcccf02cad707e307579ae9e62f3cba23be5d184bb4defe60ee4f12f58626eab210130a145b63f1ed8c17ce21891ee47c2",
+          "sha256": "addcb8cacc44085f3fd700ec61af513757eabfdd034fdbc53246d0b190dff21d",
+          "sha1": "033fbd91918541139f3144487dc80a75ac1b7856",
+          "md5": "3485b45ee2124cddba3ba2fb415f2c2c"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "QTMGradlePlugin-0.1.7-javadoc.jar",
+          "url": "QTMGradlePlugin-0.1.7-javadoc.jar",
+          "size": 261,
+          "sha512": "08423cea68b9de1884b0c7bf4826e2158933eb49fc3bebc37a6874dd57cf46731149a99d76c9770613b3157ee2e363c75ab599885291771590b0996d1d464e5f",
+          "sha256": "abac14e681a542a88a658b71d5c598384210dd2330f76ec6cf06dcbe3903d39f",
+          "sha1": "fe7871b84ce01d9e47508557974a9a78c298f1d4",
+          "md5": "767789f169f54f8ec318b652bae6f45a"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "QTMGradlePlugin-0.1.7-sources.jar",
+          "url": "QTMGradlePlugin-0.1.7-sources.jar",
+          "size": 7215,
+          "sha512": "27941e01cf69daec15c1087949f73c346f624d542ce2afedfa606aa5997c383f5df23cbd224d715f84760968185a3aa604d441bfe233dfb7afde55fbe1640865",
+          "sha256": "e90814a3c6afa13561159c107ee936de5be7d41d5ee76ae9549e354d6822d175",
+          "sha1": "f1f9e0332c5b3fff22bd174f74e7bda3fbbc4732",
+          "md5": "35d650d9faf2a81549a5ee17aed8d6b6"
         }
       ]
     }
